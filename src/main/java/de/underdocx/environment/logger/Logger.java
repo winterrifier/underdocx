@@ -30,8 +30,6 @@ import java.io.StringWriter;
 
 /**
  * Logger interface that can be implemented to use any other logger framework.
- *
- * @See Env
  */
 public interface Logger {
 

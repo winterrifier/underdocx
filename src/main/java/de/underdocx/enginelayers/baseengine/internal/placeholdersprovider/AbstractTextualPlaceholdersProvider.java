@@ -51,8 +51,8 @@ public abstract class AbstractTextualPlaceholdersProvider<C extends OdfContainer
     }
 
     private class NodesEnumerator implements Enumerator<Node> {
-        private ParagraphWalker walker;
-        private List<Node> collectedNodes = new ArrayList<>();
+        private final ParagraphWalker walker;
+        private final List<Node> collectedNodes = new ArrayList<>();
         private Node next = null;
 
         public NodesEnumerator(C doc) {

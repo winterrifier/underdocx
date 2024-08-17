@@ -42,7 +42,7 @@ public class Encapsulator {
 
     private final TextDetectionResult.TextArea area;
 
-    private static Regex WS = new Regex("\\t\\r\\n");
+    private static final Regex WS = new Regex("\\t\\r\\n");
 
     public static Node encapsulate(TextDetectionResult.TextArea area) {
         return new Encapsulator(area).exec();
@@ -146,7 +146,7 @@ public class Encapsulator {
 
     private Set<Node> deleteMiddleTextNodes() {
         if (getBeginNodeIndex() == getEndNodeIndex()) return Set.of();
-        return also(Collections.newSetFromMap(new IdentityHashMap()), result -> {
+        return also(Collections.newSetFromMap(new IdentityHashMap<>()), result -> {
             for (int i = getBeginNodeIndex() + 1; i <= getEndNodeIndex(); i++) {
                 Node node = getNode(i);
                 if (getInterpreter().isPlainTextType(node)) {

@@ -47,7 +47,7 @@ public class OdtTextNodeInterpreter extends AbstractOdtTextNodeInterpreter {
     public Node createTextContainer(Node parent) {
         // return parent.getOwnerDocument().createElementNS("urn:oasis:names:tc:opendocument:xmlns:text:1.0", spanElementName);
         try {
-            return also(new TextSpanElement(OdfTools.getFileDom(parent)), span -> parent.appendChild(span));
+            return also(new TextSpanElement(OdfTools.getFileDom(parent)), parent::appendChild);
         } catch (Exception e) {
             throw new UnderdocxExecutionException(e);
         }

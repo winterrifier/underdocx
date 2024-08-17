@@ -37,17 +37,13 @@ import static de.underdocx.tools.common.Convenience.also;
 
 public class TreeNodeCollector implements Enumerator<Node> {
 
-    public static final Predicate<TreeWalker.VisitState> BeginVisitNodeFilter = visitState -> visitState.isBeginVisit();
+    public static final Predicate<TreeWalker.VisitState> BeginVisitNodeFilter = TreeWalker.VisitState::isBeginVisit;
 
     private final Predicate<TreeWalker.VisitState> filter;
     private final List<Node> path;
-    private final Node limit;
-    private final Node start;
     private final TreeWalker walker;
 
     public TreeNodeCollector(Node start, Node limit, List<Node> path, Predicate<TreeWalker.VisitState> filter) {
-        this.start = start;
-        this.limit = limit;
         this.path = path;
         this.filter = filter;
         this.walker = new TreeWalker(start, limit);
@@ -64,7 +60,7 @@ public class TreeNodeCollector implements Enumerator<Node> {
     private Optional<Node> nextNode(boolean keepCurrentState) {
         TreeWalker treeWalker = keepCurrentState ? new TreeWalker(walker) : walker;
         Optional<TreeWalker.VisitState> next = treeWalker.next(filter);
-        return next.isPresent() ? Optional.ofNullable(next.get().getNode()) : Optional.empty();
+        return next.map(TreeWalker.VisitState::getNode);
     }
 
     @Override
@@ -73,7 +69,7 @@ public class TreeNodeCollector implements Enumerator<Node> {
     }
 
     public Node next() {
-        return also(nextNode(false), optionalNode -> optionalNode.ifPresent(node -> path.add(node))).orElse(null);
+        return also(nextNode(false), optionalNode -> optionalNode.ifPresent(path::add)).orElse(null);
     }
 
     public List<Node> getNodes() {

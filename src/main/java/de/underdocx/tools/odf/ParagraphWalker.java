@@ -41,7 +41,7 @@ public class ParagraphWalker implements Enumerator<TextParagraphElementBase> {
     private final boolean skipChildren;
     private TextParagraphElementBase next;
 
-    public ParagraphWalker(OdfContainer doc, boolean skipParagraphChildNodes) {
+    public ParagraphWalker(OdfContainer<?> doc, boolean skipParagraphChildNodes) {
         Node node = doc.getContentDom();
         this.treeWalker = new TreeWalker(node, node);
         this.skipChildren = skipParagraphChildNodes;
@@ -54,7 +54,7 @@ public class ParagraphWalker implements Enumerator<TextParagraphElementBase> {
             next = null;
         }
         Predicate<TreeWalker.VisitState> p = state -> state != null && state.isBeginVisit() && state.getNode() instanceof TextParagraphElementBase;
-        next = (TextParagraphElementBase) getOrDefault(treeWalker.next(p), state -> state.getNode(), null);
+        next = (TextParagraphElementBase) getOrDefault(treeWalker.next(p), TreeWalker.VisitState::getNode, null);
     }
 
     @Override

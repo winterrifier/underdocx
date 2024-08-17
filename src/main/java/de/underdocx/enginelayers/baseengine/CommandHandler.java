@@ -31,7 +31,7 @@ public interface CommandHandler<C extends DocContainer<D>, P, D> {
     enum CommandHandlerResult {
         IGNORED,
         EXECUTED,
-        EXECUTED_RESCAN_REQUIRED;
+        EXECUTED_RESCAN_REQUIRED
     }
 
     CommandHandlerResult tryExecuteCommand(Selection<C, P, D> selection);

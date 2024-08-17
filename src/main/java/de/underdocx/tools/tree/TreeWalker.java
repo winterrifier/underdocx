@@ -51,7 +51,7 @@ public class TreeWalker implements Enumerator<TreeWalker.VisitState> {
     }
 
     private VisitState nextStateSkipChildren() {
-        VisitState result = null;
+        VisitState result;
         if (state != null && state.beginVisit && state.node.hasChildNodes()) {
             result = new VisitState(state.node, false);
         } else {
@@ -101,7 +101,7 @@ public class TreeWalker implements Enumerator<TreeWalker.VisitState> {
 
     public static Node findNextNode(Node node, Node scope, boolean skipChildren) {
         TreeWalker walker = new TreeWalker(node, scope);
-        VisitState state = null;
+        VisitState state;
         walker.next();
         do {
             state = skipChildren ? walker.nextSkipChildren() : walker.next();

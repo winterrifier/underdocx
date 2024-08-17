@@ -33,7 +33,7 @@ public interface PlaceholderCodec<P> {
     String getTextContent(P data);
 
 
-    public static class PlaceholderParseException extends UnderdocxExecutionException {
+    class PlaceholderParseException extends UnderdocxExecutionException {
         public PlaceholderParseException() {
         }
 

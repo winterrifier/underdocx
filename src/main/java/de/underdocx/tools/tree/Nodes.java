@@ -60,7 +60,7 @@ public class Nodes {
 
     public static Map<String, String> attributes(Node node) {
         NamedNodeMap mapToConvert = node.getAttributes();
-        Map<String, String> result = new LinkedHashMap<String, String>();
+        Map<String, String> result = new LinkedHashMap<>();
         for (int i = 0; i < mapToConvert.getLength(); i++) {
             result.put(mapToConvert.item(i).getNodeName(), mapToConvert.item(i).getNodeValue());
         }
@@ -176,7 +176,7 @@ public class Nodes {
     }
 
     public static void insertNode(Node refNode, Node toInsert, boolean insertBefore) {
-        insertNodes(refNode, Arrays.asList(toInsert), insertBefore);
+        insertNodes(refNode, Collections.singletonList(toInsert), insertBefore);
     }
 
     public static void insertBefore(Node refNode, Node toInsert) {
@@ -199,9 +199,7 @@ public class Nodes {
         if (parent.hasChildNodes() && atBegin) {
             insertNodes(parent.getFirstChild(), toInsert, true);
         } else {
-            new ArrayList<>(toInsert).forEach(element -> {
-                parent.appendChild(element);
-            });
+            new ArrayList<>(toInsert).forEach(parent::appendChild);
         }
     }
 

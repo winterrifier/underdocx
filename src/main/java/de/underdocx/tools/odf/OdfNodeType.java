@@ -37,7 +37,7 @@ public enum OdfNodeType {
     ATTRIBUTE_SPACE_COUNT("text:c");
 
 
-    private String name;
+    private final String name;
 
     OdfNodeType(String name) {
         this.name = name;

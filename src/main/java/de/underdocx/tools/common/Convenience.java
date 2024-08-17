@@ -50,27 +50,27 @@ public class Convenience {
 
 
     public static <E> List<E> buildList(Consumer<List<E>> consumer) {
-        return also(new ArrayList(), result -> consumer.accept(result));
+        return also(new ArrayList<>(), consumer::accept);
     }
 
     public static String buildString(Consumer<StringBuilder> consumer) {
-        return also(new StringBuilder(), result -> consumer.accept(result)).toString();
+        return also(new StringBuilder(), consumer).toString();
     }
 
     public static <T> Optional<T> buildOptional(Consumer<Wrapper<T>> consumer) {
-        return also(new Wrapper<T>(), result -> consumer.accept(result)).toOptional();
+        return also(new Wrapper<>(), consumer).toOptional();
     }
 
     public static <T> Optional<T> buildOptional(T initValue, Consumer<Wrapper<T>> consumer) {
-        return also(new Wrapper<T>(initValue), result -> consumer.accept(result)).toOptional();
+        return also(new Wrapper<>(initValue), consumer).toOptional();
     }
 
     public static <T> T build(Consumer<Wrapper<T>> consumer) {
-        return also(new Wrapper<T>(), result -> consumer.accept(result)).value;
+        return also(new Wrapper<>(), consumer).value;
     }
 
     public static <T> T build(T initValue, Consumer<Wrapper<T>> consumer) {
-        return also(new Wrapper<T>(initValue), result -> consumer.accept(result)).value;
+        return also(new Wrapper<>(initValue), consumer).value;
     }
 
 

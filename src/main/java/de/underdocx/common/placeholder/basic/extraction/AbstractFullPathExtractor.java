@@ -27,6 +27,7 @@ package de.underdocx.common.placeholder.basic.extraction;
 import de.underdocx.common.placeholder.basic.detection.TextDetectionResult;
 import de.underdocx.common.placeholder.basic.detection.TextDetector;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
+import de.underdocx.tools.tree.Enumerator;
 import de.underdocx.tools.tree.TreeWalker;
 import de.underdocx.tools.tree.nodepath.TextNodePath;
 import de.underdocx.tools.tree.nodepath.TreeNodeCollector;
@@ -48,7 +49,7 @@ public class AbstractFullPathExtractor extends AbstractExtractor {
         return buildList(result -> {
             Node start = tree;
             while (start != null) {
-                TextNodePath fullPath = new TextNodePath(also(new TreeNodeCollector(start, tree), c -> c.collect()).getNodes(), interpreter);
+                TextNodePath fullPath = new TextNodePath(also(new TreeNodeCollector(start, tree), Enumerator::collect).getNodes(), interpreter);
                 TextDetectionResult.TextArea area = detector.detect(fullPath).area;
                 if (area != null) {
                     Node foundNode = getIfEncapsulated(area).orElse(Encapsulator.encapsulate(area));

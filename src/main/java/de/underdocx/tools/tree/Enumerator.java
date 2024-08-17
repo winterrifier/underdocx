@@ -103,6 +103,7 @@ public interface Enumerator<T> extends Iterable<T>, Iterator<T>, Enumeration<T> 
         };
     }
 
+    @Override
     default Iterator<T> iterator() {
         return this;
     }

@@ -24,12 +24,13 @@ SOFTWARE.
 
 package de.underdocx.common.placeholder.basic.textnodeinterpreter;
 
-import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.odf.OdfNodeType;
 import de.underdocx.tools.tree.Nodes;
 import org.w3c.dom.Node;
 
 import java.util.Arrays;
+
+import static de.underdocx.tools.common.Convenience.buildString;
 
 public abstract class AbstractOdtTextNodeInterpreter implements TextNodeInterpreter {
 
@@ -60,15 +61,13 @@ public abstract class AbstractOdtTextNodeInterpreter implements TextNodeInterpre
         if (isOneOf(node, spanElementName, aElementName, pElementName)) return "";
         if (is(node, tabElementName)) return "\t";
         if (is(node, lineBreakElementName)) return System.lineSeparator();
-        if (is(node, sElementName)) return Convenience.buildString(buffer -> {
-            for (int i = 0; i < getC(node); i++) buffer.append(" ");
-        });
+        if (is(node, sElementName)) return buildString(buffer -> buffer.append(" ".repeat(Math.max(0, getC(node)))));
         return null;
     }
 
     private int getC(Node node) {
         try {
-            return Integer.valueOf(Nodes.attributes(node).getOrDefault(cAttributeName, "0"));
+            return Integer.parseInt(Nodes.attributes(node).getOrDefault(cAttributeName, "0"));
         } catch (Exception e) {
             return 0;
         }

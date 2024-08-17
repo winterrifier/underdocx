@@ -38,14 +38,12 @@ import static de.underdocx.tools.common.Convenience.also;
 
 public class PlaceholdersEnumerator<C extends DocContainer<D>, D> implements Enumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> {
 
-    private Map<PlaceholdersProvider<C, ?, D>, Enumerator<Node>> currentEnumerators = new HashMap<>();
-    private Map<PlaceholdersProvider<C, ?, D>, Node> currentNodes = new HashMap<>();
+    private final Map<PlaceholdersProvider<C, ?, D>, Enumerator<Node>> currentEnumerators = new HashMap<>();
+    private final Map<PlaceholdersProvider<C, ?, D>, Node> currentNodes = new HashMap<>();
     private Pair<PlaceholdersProvider<C, ?, D>, Node> next = null;
 
     public PlaceholdersEnumerator(C doc, Set<PlaceholdersProvider<C, ?, D>> providers) {
-        providers.forEach(provider -> {
-            currentEnumerators.put(provider, provider.getPlaceholders(doc));
-        });
+        providers.forEach(provider -> currentEnumerators.put(provider, provider.getPlaceholders(doc)));
         currentEnumerators.forEach((provider, enumerator) -> {
             Node node = enumerator.next();
             if (node != null && (next == null || Nodes.compareNodePositions(node, next.right) < 0)) {

@@ -39,7 +39,7 @@ public class DefaultODTEngine implements Runnable {
 
     private static final SimpleDollarPlaceholdersProvider<OdtContainer, OdfTextDocument> simpleDollar = new SimpleDollarPlaceholdersProvider<>();
 
-    private BaseEngine<OdtContainer, OdfTextDocument> engine;
+    private final BaseEngine<OdtContainer, OdfTextDocument> engine;
 
     public DefaultODTEngine(OdtContainer doc) {
         this.engine = new BaseEngine<>(doc);

@@ -32,8 +32,8 @@ import java.util.Map;
 import static de.underdocx.tools.common.Convenience.buildString;
 
 public class TreePrinter {
-    private Map<Node, String> nodeMarkerMap = new IdentityHashMap<>();
-    private Node tree;
+    private final Map<Node, String> nodeMarkerMap = new IdentityHashMap<>();
+    private final Node tree;
     private boolean noWS = false;
 
     public TreePrinter(Node tree) {
@@ -43,6 +43,10 @@ public class TreePrinter {
     public TreePrinter(Node tree, boolean noWhitespace) {
         this.tree = tree;
         this.noWS = noWhitespace;
+    }
+
+    public void addMarker(Node node, String marker) {
+        nodeMarkerMap.put(node, marker);
     }
 
     public String toString() {
@@ -55,8 +59,10 @@ public class TreePrinter {
                     newLine(builder, intent);
                     if (Nodes.isText(state.getNode())) {
                         builder.append(state.getNode().getNodeValue());
+                        checkMarker(builder, state);
                     } else {
                         builder.append("<").append(state.getNode().getNodeName()).append(">");
+                        checkMarker(builder, state);
                     }
                     intent++;
                 } else {
@@ -64,18 +70,23 @@ public class TreePrinter {
                     if (!Nodes.isText(state.getNode())) {
                         newLine(builder, intent);
                         builder.append("</").append(state.getNode().getNodeName()).append(">");
+                        checkMarker(builder, state);
                     }
                 }
             }
         });
     }
 
+    private void checkMarker(StringBuilder builder, TreeWalker.VisitState state) {
+        if (nodeMarkerMap.containsKey(state.getNode())) {
+            builder.append("@").append(nodeMarkerMap.get(state.getNode()));
+        }
+    }
+
     private void newLine(StringBuilder b, int intent) {
         if (noWS) return;
         b.append("\n");
-        for (int i = 0; i < intent; i++) {
-            b.append("  ");
-        }
+        b.append("  ".repeat(Math.max(0, intent)));
     }
 
     public static String getTreeString(Node tree) {

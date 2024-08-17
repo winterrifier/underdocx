@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class Regex {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public Regex(Pattern pattern) {
         this.pattern = pattern;

@@ -39,7 +39,7 @@ public class TextDetectionResult {
     }
 
     public enum TextDetectionResultType {
-        CONTAINS_TEXT, CONTAINS_START, NO_DETECTION;
+        CONTAINS_TEXT, CONTAINS_START, NO_DETECTION
     }
 
     public static class TextArea {

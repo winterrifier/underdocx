@@ -31,7 +31,7 @@ public enum LogLevel {
     ERROR("ERROR"),
     FATAL("FATAL");
 
-    private String level;
+    private final String level;
 
     LogLevel(String levelStr) {
         this.level = levelStr;
