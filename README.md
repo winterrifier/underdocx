@@ -5,9 +5,9 @@ Underdocx is an extendable open source framework to manipulate ODT Documents
 found and replaced by custom texts, images, tables and other documents.
 Also documents can be converted to PDF if LibreOffice has been installed.
 
-Underdocs is still unter development. See the
+Underdocx is still under development. See the
 [Release-Plan](https://github.com/winterrifier/underdocx/wiki/Release-Plan)
-which features are already available and will be released in future.
+which features are already available and will be released in the future.
 
 ## Demo
 
