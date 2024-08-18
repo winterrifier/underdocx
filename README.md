@@ -1,4 +1,4 @@
-# Welcome to underdocx
+![Underdocx](./src/main/resources/logo-title.svg)
 
 Underdocx is an extendable open source framework to manipulate ODT Documents
 (LibreOffice / OpenOffice). It uses different types of placeholders that can be
