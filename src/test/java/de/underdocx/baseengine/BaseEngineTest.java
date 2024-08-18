@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.engine;
+package de.underdocx.baseengine;
 
 import de.underdocx.AbstractOdtTest;
 import de.underdocx.DefaultODTEngine;
@@ -30,7 +30,7 @@ import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
 import de.underdocx.enginelayers.baseengine.BaseEngine;
 import de.underdocx.enginelayers.baseengine.internal.commands.SimpleReplaceFunctionCommand;
-import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.SimpleDollarPlaceholdersProvider;
+import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
 import de.underdocx.tools.tree.Nodes;
 import de.underdocx.tools.tree.TreePrinter;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ public class BaseEngineTest extends AbstractOdtTest {
         OdtContainer doc = new OdtContainer("Hello $name");
         BaseEngine<OdtContainer, OdfTextDocument> baseEngine = new BaseEngine<>(doc);
         baseEngine.registerCommandHandler(
-                new SimpleDollarPlaceholdersProvider(),
+                new SimpleDollarPlaceholdersProvider(doc),
                 new SimpleReplaceFunctionCommand<>(foundString -> Optional.ofNullable(foundString.equals("name") ? "World" : null))
         );
         baseEngine.run();
@@ -71,8 +71,8 @@ public class BaseEngineTest extends AbstractOdtTest {
     @Test
     public void testSimpleDollarPlaceholderProviderEncapsulated() {
         OdtContainer doc = new OdtContainer("Hello $name");
-        SimpleDollarPlaceholdersProvider<OdtContainer, OdfTextDocument> provider = new SimpleDollarPlaceholdersProvider<>();
-        Node node = provider.getPlaceholders(doc).next();
+        SimpleDollarPlaceholdersProvider<OdtContainer, OdfTextDocument> provider = new SimpleDollarPlaceholdersProvider<>(doc);
+        Node node = provider.getPlaceholders().next();
         assertThat(node.getFirstChild().getNodeValue()).isEqualTo("$name");
     }
 
@@ -87,4 +87,20 @@ public class BaseEngineTest extends AbstractOdtTest {
         assertThat(xmlTree).isEqualTo("<root><p>Hallo <span>$name</span> :-)</p></root>");
     }
 
+    @Test
+    public void testSimpleImage() throws Exception {
+        OdtContainer doc = new OdtContainer(getResource("ContainsImagePlaceholder.odt"));
+        assertThat(Nodes.findFirstDescendantNode(doc.getContentDom(), node ->
+                (Nodes.attributes(node).getOrDefault("draw:name", "").startsWith("$")
+                )).isPresent());
+        String imageURI = createTmpUri(getResource("image3.jpg"), "jpg");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.registerSimpleDollarImageReplacement("image", imageURI, true);
+        engine.run();
+        assertThat(Nodes.findFirstDescendantNode(doc.getContentDom(), node ->
+                (Nodes.attributes(node).getOrDefault("draw:name", "").startsWith("$")
+                )).isEmpty());
+        //show(doc);
+
+    }
 }

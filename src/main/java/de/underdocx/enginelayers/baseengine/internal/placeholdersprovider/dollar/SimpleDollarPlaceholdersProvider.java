@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider;
+package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar;
 
 import de.underdocx.common.doc.odf.OdfContainer;
 import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
@@ -31,6 +31,7 @@ import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.common.placeholder.basic.extraction.RegexExtractor;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdfTextNodeInterpreter;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
+import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.AbstractTextualPlaceholdersProvider;
 import de.underdocx.tools.common.Regex;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
@@ -50,12 +51,12 @@ public class SimpleDollarPlaceholdersProvider<C extends OdfContainer<D>, D exten
         }
     };
 
-    public SimpleDollarPlaceholdersProvider() {
-        super(new TextualPlaceholderToolkit<>(defaultExtractor, codec));
+    public SimpleDollarPlaceholdersProvider(C doc) {
+        super(doc, new TextualPlaceholderToolkit<>(defaultExtractor, codec));
     }
 
-    public SimpleDollarPlaceholdersProvider(TextNodeInterpreter interpreter) {
-        super(new TextualPlaceholderToolkit<>(createExtractor(interpreter), codec));
+    public SimpleDollarPlaceholdersProvider(C doc, TextNodeInterpreter interpreter) {
+        super(doc, new TextualPlaceholderToolkit<>(createExtractor(interpreter), codec));
     }
 
     public static EncapsulatedNodesExtractor createExtractor(TextNodeInterpreter interpreter) {

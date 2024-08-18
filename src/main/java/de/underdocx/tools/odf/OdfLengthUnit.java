@@ -22,32 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.engine;
+package de.underdocx.tools.odf;
 
-import de.underdocx.AbstractOdtTest;
-import de.underdocx.common.doc.odf.OdtContainer;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
+import java.util.Optional;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+public enum OdfLengthUnit {
+    CM("cm");
 
-public class PDFTest extends AbstractOdtTest {
+    private final String unitStr;
 
+    OdfLengthUnit(String str) {
+        this.unitStr = str;
+    }
 
-    @Test
-    @EnabledIf(value = "isIsLibreOfficeInstalled")
-    public void testCreatePDF() {
-        OdtContainer doc = new OdtContainer("Test");
-        File tmpPDF = createTmpFile("pdftest", "pdf");
-        try (FileOutputStream fos = new FileOutputStream(tmpPDF)) {
-            doc.writePDF(fos);
-            Assertions.assertThat(tmpPDF.exists()).isTrue();
-            Assertions.assertThat(tmpPDF.length()).isGreaterThan(1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public String toString() {
+        return this.unitStr;
+    }
+
+    public static Optional<OdfLengthUnit> parseValue(String value) {
+        for (OdfLengthUnit element : values()) {
+            if (value.endsWith(element.unitStr)) {
+                return Optional.of(element);
+            }
         }
+        return Optional.empty();
     }
 }

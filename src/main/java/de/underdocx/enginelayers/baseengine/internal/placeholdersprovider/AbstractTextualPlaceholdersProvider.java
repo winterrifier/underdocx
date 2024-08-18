@@ -37,13 +37,15 @@ import java.util.Optional;
 public abstract class AbstractTextualPlaceholdersProvider<C extends OdfContainer<D>, P, D extends OdfDocument> implements PlaceholdersProvider<C, P, D> {
 
     private final TextualPlaceholderToolkit<P> toolkit;
+    private final OdfContainer<?> doc;
 
-    protected AbstractTextualPlaceholdersProvider(TextualPlaceholderToolkit<P> toolkit) {
+    protected AbstractTextualPlaceholdersProvider(OdfContainer<?> doc, TextualPlaceholderToolkit<P> toolkit) {
         this.toolkit = toolkit;
+        this.doc = doc;
     }
 
     @Override
-    public Enumerator<Node> getPlaceholders(C doc) {
+    public Enumerator<Node> getPlaceholders() {
         return new ParagraphByParagraphNodesEnumerator(doc, p -> toolkit.extractPlaceholders(p), true);
     }
 

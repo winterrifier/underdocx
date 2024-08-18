@@ -22,14 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.placeholder.image;
+package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image;
 
+import de.underdocx.common.doc.odf.OdfContainer;
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdfTextNodeInterpreter;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
+import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
 import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.common.Pair;
 import de.underdocx.tools.odf.OdfNodeType;
@@ -45,7 +47,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ImagePlaceholders implements EncapsulatedNodesExtractor, PlaceholdersProvider<OdtContainer, ImageData, OdfTextDocument> {
+public class SimpleDollarImagePlaceholdersProvider implements EncapsulatedNodesExtractor, PlaceholdersProvider<OdtContainer, SimpleDollarImagePlaceholderData, OdfTextDocument> {
+    private final OdfContainer<?> doc;
+
+    public SimpleDollarImagePlaceholdersProvider(OdfContainer<?> doc) {
+        this.doc = doc;
+    }
+
     private static TextNodeInterpreter interpreter = OdfTextNodeInterpreter.INSTANCE;
 
     private Optional<DrawFrameElement> getFrame(Node node) {
@@ -67,6 +75,12 @@ public class ImagePlaceholders implements EncapsulatedNodesExtractor, Placeholde
         }));
     }
 
+    private Optional<SimpleDollarImagePlaceholderData> getImageDate(Node node) {
+        return Optional.ofNullable(Convenience.build(w ->
+                getImageElements(node).ifPresent(elements -> w.value = new SimpleDollarImagePlaceholderData(doc, elements))
+        ));
+    }
+
     @Override
     public List<Node> extractNodes(Node tree) {
         return Convenience.also(new ArrayList<Node>(), result -> {
@@ -78,7 +92,9 @@ public class ImagePlaceholders implements EncapsulatedNodesExtractor, Placeholde
 
     @Override
     public boolean isEncapsulatedNode(Node node) {
-        return getImageElements(node).isPresent();
+        return Convenience.build(false, w -> {
+            getImageDate(node).ifPresent(imageData -> w.value = SimpleDollarPlaceholdersProvider.regex.matches(imageData.getName()));
+        });
     }
 
     @Override
@@ -87,17 +103,19 @@ public class ImagePlaceholders implements EncapsulatedNodesExtractor, Placeholde
     }
 
     @Override
-    public Enumerator<Node> getPlaceholders(OdtContainer doc) {
+    public Enumerator<Node> getPlaceholders() {
         return new ParagraphByParagraphNodesEnumerator(doc, p -> this.extractNodes(p), true);
     }
 
     @Override
-    public ImageData getPlaceholderData(Node node) {
-        return null;
+    public SimpleDollarImagePlaceholderData getPlaceholderData(Node node) {
+        return new SimpleDollarImagePlaceholderData(doc, getImageElements(node).get());
     }
 
     @Override
-    public Optional<TextualPlaceholderToolkit<ImageData>> getPlaceholderToolkit() {
+    public Optional<TextualPlaceholderToolkit<SimpleDollarImagePlaceholderData>> getPlaceholderToolkit() {
         return Optional.empty();
     }
+
+
 }

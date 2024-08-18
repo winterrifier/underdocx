@@ -22,7 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.placeholder.image;
+package de.underdocx.baseengine;
 
-public class ImageData {
+import de.underdocx.AbstractOdtTest;
+import de.underdocx.common.doc.odf.OdtContainer;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class PDFTest extends AbstractOdtTest {
+
+
+    @Test
+    @EnabledIf(value = "isIsLibreOfficeInstalled")
+    public void testCreatePDF() {
+        OdtContainer doc = new OdtContainer("Test");
+        File tmpPDF = createTmpFile("pdftest", "pdf");
+        try (FileOutputStream fos = new FileOutputStream(tmpPDF)) {
+            doc.writePDF(fos);
+            Assertions.assertThat(tmpPDF.exists()).isTrue();
+            Assertions.assertThat(tmpPDF.length()).isGreaterThan(1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

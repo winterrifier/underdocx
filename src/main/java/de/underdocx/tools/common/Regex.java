@@ -41,21 +41,28 @@ public class Regex {
     }
 
     public Optional<Pair<Integer, Integer>> findFirst(String text) {
+        if (text == null) return Optional.empty();
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             return Optional.of(new Pair<>(matcher.start(), matcher.end() - 1));
         } else {
             return Optional.empty();
         }
+    }
 
+    public Optional<String> findFirstAsString(String text) {
+        if (text == null) return Optional.empty();
+        return Convenience.buildOptional(w -> {
+            findFirst(text).ifPresent(r -> w.value = text.substring(r.left, r.right + 1));
+        });
     }
 
     public boolean contains(String text) {
-        return findFirst(text).isPresent();
+        return text != null && findFirst(text).isPresent();
     }
 
     public boolean matches(String text) {
-        return pattern.matcher(text).matches();
+        return text != null && pattern.matcher(text).matches();
     }
 
     public String replaceAll(String text, String replaceWith) {

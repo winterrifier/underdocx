@@ -57,7 +57,7 @@ public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
     }
 
     protected Enumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> createPlaceholdersEnumerator() {
-        return new PlaceholdersEnumerator<>(doc, registry.keySet());
+        return new PlaceholdersEnumerator<>(registry.keySet());
     }
 
     protected CommandHandler.CommandHandlerResult findAndExecCommandHandler(PlaceholdersProvider<C, ?, D> provider, Selection<C, ?, D> selection) {

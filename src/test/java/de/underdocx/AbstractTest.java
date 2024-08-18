@@ -59,6 +59,7 @@ public abstract class AbstractTest {
     protected String createTmpUri(InputStream is, String extension, long lifetime) {
         try {
             File file = createTmpFile(extension);
+            file.deleteOnExit();
             FileUtils.copyInputStreamToFile(is, file);
             new Timer().schedule(new TimerTask() {
                 @Override

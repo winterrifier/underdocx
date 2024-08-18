@@ -61,6 +61,7 @@ public class Nodes {
 
     public static Map<String, String> attributes(Node node) {
         NamedNodeMap mapToConvert = node.getAttributes();
+        if (mapToConvert == null) return new HashMap<>();
         Map<String, String> result = new LinkedHashMap<>();
         for (int i = 0; i < mapToConvert.getLength(); i++) {
             result.put(mapToConvert.item(i).getNodeName(), mapToConvert.item(i).getNodeValue());

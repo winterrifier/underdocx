@@ -42,8 +42,9 @@ public class PlaceholdersEnumerator<C extends DocContainer<D>, D> implements Enu
     private final Map<PlaceholdersProvider<C, ?, D>, Node> currentNodes = new HashMap<>();
     private Pair<PlaceholdersProvider<C, ?, D>, Node> next = null;
 
-    public PlaceholdersEnumerator(C doc, Set<PlaceholdersProvider<C, ?, D>> providers) {
-        providers.forEach(provider -> currentEnumerators.put(provider, provider.getPlaceholders(doc)));
+
+    public PlaceholdersEnumerator(Set<PlaceholdersProvider<C, ?, D>> providers) {
+        providers.forEach(provider -> currentEnumerators.put(provider, provider.getPlaceholders()));
         currentEnumerators.forEach((provider, enumerator) -> {
             Node node = enumerator.next();
             if (node != null && (next == null || Nodes.compareNodePositions(node, next.right) < 0)) {

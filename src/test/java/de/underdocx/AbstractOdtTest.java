@@ -1,5 +1,6 @@
 package de.underdocx;
 
+import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.AbstractOdfTextNodeInterpreter;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
@@ -12,6 +13,9 @@ import org.odftoolkit.odfdom.incubator.search.TextNavigation;
 import org.odftoolkit.odfdom.incubator.search.TextSelection;
 import org.w3c.dom.Node;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -128,5 +132,15 @@ public class AbstractOdtTest extends AbstractTest {
             Nodes.setNodeText(node, text);
         }
     };
+
+    protected void show(DocContainer<?> doc) {
+        File tmp = createTmpFile(doc.getFileExtension());
+        try {
+            doc.save(tmp);
+            Desktop.getDesktop().open(tmp);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
