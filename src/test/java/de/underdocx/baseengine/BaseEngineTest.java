@@ -103,4 +103,27 @@ public class BaseEngineTest extends AbstractOdtTest {
         //show(doc);
 
     }
+
+    @Test
+    public void testSimpleImageAndText() throws Exception {
+        OdtContainer doc = new OdtContainer(getResource("ContainsImagePlaceholder.odt"));
+        doc.getDocument().addText("$name");
+        assertThat(Nodes.findFirstDescendantNode(doc.getContentDom(), node ->
+                (Nodes.attributes(node).getOrDefault("draw:name", "").startsWith("$")
+                )).isPresent());
+        assertContains(doc, "$name");
+        //show(doc);
+        String imageURI = createTmpUri(getResource("image3.jpg"), "jpg");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.registerSimpleDollarImageReplacement("image", imageURI, true);
+        engine.registerSimpleDollarReplacement("name", "Test");
+        engine.run();
+        //show(doc);
+        assertThat(Nodes.findFirstDescendantNode(doc.getContentDom(), node ->
+                (Nodes.attributes(node).getOrDefault("draw:name", "").startsWith("$")
+                )).isEmpty());
+        assertContains(doc, "Test");
+        assertNotContains(doc, "$");
+
+    }
 }
