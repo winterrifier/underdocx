@@ -1,7 +1,7 @@
 package de.underdocx;
 
 import de.underdocx.common.doc.odf.OdtContainer;
-import de.underdocx.common.placeholder.basic.textnodeinterpreter.AbstractOdtTextNodeInterpreter;
+import de.underdocx.common.placeholder.basic.textnodeinterpreter.AbstractOdfTextNodeInterpreter;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.odf.OdfNodeType;
@@ -111,7 +111,7 @@ public class AbstractOdtTest extends AbstractTest {
      */
 
 
-    protected static TextNodeInterpreter testTextNodeInterpreter = new AbstractOdtTextNodeInterpreter() {
+    protected static TextNodeInterpreter testTextNodeInterpreter = new AbstractOdfTextNodeInterpreter() {
 
         @Override
         protected String getNodeName(OdfNodeType name) {

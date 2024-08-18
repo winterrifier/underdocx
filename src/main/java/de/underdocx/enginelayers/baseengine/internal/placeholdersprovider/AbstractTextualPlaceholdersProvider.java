@@ -27,14 +27,11 @@ package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider;
 import de.underdocx.common.doc.odf.OdfContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
-import de.underdocx.tools.odf.ParagraphWalker;
+import de.underdocx.tools.odf.ParagraphByParagraphNodesEnumerator;
 import de.underdocx.tools.tree.Enumerator;
 import org.odftoolkit.odfdom.doc.OdfDocument;
-import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractTextualPlaceholdersProvider<C extends OdfContainer<D>, P, D extends OdfDocument> implements PlaceholdersProvider<C, P, D> {
@@ -47,45 +44,9 @@ public abstract class AbstractTextualPlaceholdersProvider<C extends OdfContainer
 
     @Override
     public Enumerator<Node> getPlaceholders(C doc) {
-        return new NodesEnumerator(doc);
+        return new ParagraphByParagraphNodesEnumerator(doc, p -> toolkit.extractPlaceholders(p), true);
     }
 
-    private class NodesEnumerator implements Enumerator<Node> {
-        private final ParagraphWalker walker;
-        private final List<Node> collectedNodes = new ArrayList<>();
-        private Node next = null;
-
-        public NodesEnumerator(C doc) {
-            walker = new ParagraphWalker(doc, true);
-            next = findNext();
-        }
-
-        private Node findNext() {
-            return collectNodes().isEmpty() ? null : collectedNodes.remove(0);
-        }
-
-        private List<Node> collectNodes() {
-            while (collectedNodes.isEmpty() && walker.hasNext()) {
-                TextParagraphElementBase paragraph = walker.next();
-                if (paragraph != null) {
-                    collectedNodes.addAll(toolkit.extractPlaceholders(paragraph));
-                }
-            }
-            return collectedNodes;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return next != null;
-        }
-
-        @Override
-        public Node next() {
-            Node result = next;
-            next = findNext();
-            return result;
-        }
-    }
 
     @Override
     public P getPlaceholderData(Node node) {

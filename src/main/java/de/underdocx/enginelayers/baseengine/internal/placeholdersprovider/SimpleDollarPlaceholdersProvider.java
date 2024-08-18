@@ -29,7 +29,7 @@ import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
 import de.underdocx.common.placeholder.PlaceholderCodec;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.common.placeholder.basic.extraction.RegexExtractor;
-import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdtTextNodeInterpreter;
+import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdfTextNodeInterpreter;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
 import de.underdocx.tools.common.Regex;
 import org.odftoolkit.odfdom.doc.OdfDocument;
@@ -37,7 +37,7 @@ import org.odftoolkit.odfdom.doc.OdfDocument;
 public class SimpleDollarPlaceholdersProvider<C extends OdfContainer<D>, D extends OdfDocument> extends AbstractTextualPlaceholdersProvider<C, String, D> {
 
     public static final Regex regex = new Regex("\\$\\w+");
-    public static final EncapsulatedNodesExtractor defaultExtractor = createExtractor(new OdtTextNodeInterpreter());
+    public static final EncapsulatedNodesExtractor defaultExtractor = createExtractor(new OdfTextNodeInterpreter());
     public static final PlaceholderCodec<String> codec = new PlaceholderCodec<>() {
         @Override
         public String parse(String string) {

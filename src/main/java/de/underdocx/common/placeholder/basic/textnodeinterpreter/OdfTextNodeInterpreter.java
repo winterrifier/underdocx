@@ -34,8 +34,9 @@ import org.w3c.dom.Node;
 
 import static de.underdocx.tools.common.Convenience.also;
 
-public class OdtTextNodeInterpreter extends AbstractOdtTextNodeInterpreter {
+public class OdfTextNodeInterpreter extends AbstractOdfTextNodeInterpreter {
 
+    public final static OdfTextNodeInterpreter INSTANCE = new OdfTextNodeInterpreter();
 
     @Override
     public void setNodeText(Node node, String text) {

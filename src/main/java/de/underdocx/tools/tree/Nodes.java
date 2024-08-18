@@ -32,6 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static de.underdocx.tools.common.Convenience.*;
 
@@ -74,27 +75,40 @@ public class Nodes {
      */
 
     public static List<Node> findDescendantNodes(Node start, String tagName) {
-        return buildList(result -> {
-            if (start.getNodeName().equals(tagName)) {
-                result.add(start);
-            }
-            children(start).forEach(element -> result.addAll(findDescendantNodes(element, tagName)));
-        });
+        return findDescendantNodes(start, node -> node.getNodeName().equals(tagName));
     }
 
 
     public static Optional<Node> findFirstDescendantNode(Node start, String tagName) {
-        return (start.getNodeName().equals(tagName))
+        return findFirstDescendantNode(start, node -> node.getNodeName().equals(tagName));
+    }
+
+    public static List<Node> findDescendantNodes(Node start, Predicate<Node> filter) {
+        return buildList(result -> {
+            if (filter.test(start)) {
+                result.add(start);
+            }
+            children(start).forEach(element -> result.addAll(findDescendantNodes(element, filter)));
+        });
+    }
+
+
+    public static Optional<Node> findFirstDescendantNode(Node start, Predicate<Node> filter) {
+        return (filter.test(start))
                 ? Optional.of(start)
-                : findFirstPresent(children(start), child -> findFirstDescendantNode(child, tagName));
+                : findFirstPresent(children(start), child -> findFirstDescendantNode(child, filter));
     }
 
     public static Optional<Node> findAscendantNode(Node start, String tagName) {
-        if (start.getNodeName().equals(tagName)) {
+        return findAscendantNode(start, node -> node.getNodeName().equals(tagName));
+    }
+
+    public static Optional<Node> findAscendantNode(Node start, Predicate<Node> filter) {
+        if (filter.test(start)) {
             return Optional.of(start);
         } else {
             Node parent = start.getParentNode();
-            return parent == null ? Optional.empty() : findAscendantNode(parent, tagName);
+            return parent == null ? Optional.empty() : findAscendantNode(parent, filter);
         }
     }
 

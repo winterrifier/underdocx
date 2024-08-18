@@ -32,15 +32,15 @@ import java.util.Arrays;
 
 import static de.underdocx.tools.common.Convenience.buildString;
 
-public abstract class AbstractOdtTextNodeInterpreter implements TextNodeInterpreter {
+public abstract class AbstractOdfTextNodeInterpreter implements TextNodeInterpreter {
 
-    protected final String spanElementName = getNodeName(OdfNodeType.ELEMENT_SPAN);
-    protected final String tabElementName = getNodeName(OdfNodeType.ELEMENT_TAB);
-    protected final String lineBreakElementName = getNodeName(OdfNodeType.ELEMENT_LINEBREAK);
-    protected final String aElementName = getNodeName(OdfNodeType.ELEMENT_A);
-    protected final String sElementName = getNodeName(OdfNodeType.ELEMENT_SPACE);
-    protected final String pElementName = getNodeName(OdfNodeType.ELEMENT_PARAGRAPH);
-    protected final String cAttributeName = getNodeName(OdfNodeType.ATTRIBUTE_SPACE_COUNT);
+    protected final String spanElementName = getNodeName(OdfNodeType.SPAN_ELEMENT);
+    protected final String tabElementName = getNodeName(OdfNodeType.TAB_ELEMENT);
+    protected final String lineBreakElementName = getNodeName(OdfNodeType.LINEBREAK_ELEMENT);
+    protected final String aElementName = getNodeName(OdfNodeType.A_ELEMENT);
+    protected final String sElementName = getNodeName(OdfNodeType.SPACE_ELEMENT);
+    protected final String pElementName = getNodeName(OdfNodeType.PARAGRAPH_ELEMENT);
+    protected final String cAttributeName = getNodeName(OdfNodeType.SPACE_COUNT_ATTRIBUTE);
 
     protected String getNodeName(OdfNodeType name) {
         return name.getElementName();
