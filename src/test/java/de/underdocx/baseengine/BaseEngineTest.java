@@ -124,6 +124,18 @@ public class BaseEngineTest extends AbstractOdtTest {
                 )).isEmpty());
         assertContains(doc, "Test");
         assertNotContains(doc, "$");
-
     }
+
+    @Test
+    public void testSimpleDollarExtractorNoTextNodeContained() {
+        Document xml = readXML("<root><p><x></x>Hallo $name :-)</p></root>");
+        Node paragraph = Nodes.findFirstDescendantNode(xml, "p").get();
+        EncapsulatedNodesExtractor extractor = SimpleDollarPlaceholdersProvider.createExtractor(testTextNodeInterpreter);
+        List<Node> nodes = extractor.extractNodes(paragraph);
+        assertThat(nodes.get(0).getFirstChild().getNodeValue()).isEqualTo("$name");
+        String xmlTree = new TreePrinter(Nodes.findFirstDescendantNode(xml, "root").get(), true).toString();
+        assertThat(xmlTree).isEqualTo("<root><p><x></x>Hallo <span>$name</span> :-)</p></root>");
+    }
+
+
 }

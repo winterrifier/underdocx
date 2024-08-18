@@ -77,15 +77,15 @@ public class DefaultODTEngine implements Runnable {
         registerCommandHandler(simpleDollarImage, new SimpleDollarImageReplaceCommand<>(replaceFunction, keepWidth));
     }
 
-    public void registerSimpleDollarImageReplacement(String variableName, String replacement, boolean keepWidth) {
-        this.registerSimpleDollarImageReplacement(Pattern.compile(Pattern.quote(variableName)), replacement, keepWidth);
+    public void registerSimpleDollarImageReplacement(String variableName, String imageURL, boolean keepWidth) {
+        this.registerSimpleDollarImageReplacement(Pattern.compile(Pattern.quote(variableName)), imageURL, keepWidth);
     }
 
-    public void registerSimpleDollarImageReplacement(Pattern pattern, String replacement, boolean keepWidth) {
+    public void registerSimpleDollarImageReplacement(Pattern pattern, String imageURL, boolean keepWidth) {
         this.registerSimpleDollarImageReplaceFunction(variableName ->
                 {
                     try {
-                        return new Regex(pattern).matches(variableName) ? Optional.of(new URL(replacement)) : Optional.empty();
+                        return new Regex(pattern).matches(variableName) ? Optional.of(new URL(imageURL)) : Optional.empty();
                     } catch (MalformedURLException e) {
                         throw new UnderdocxExecutionException(e);
                     }

@@ -22,37 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.commands;
+package de.underdocx.common.modifiers.existingimage;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.existingimage.ExistingImageModifier;
-import de.underdocx.common.modifiers.existingimage.ExistingImageModifierData;
-import de.underdocx.enginelayers.baseengine.CommandHandler;
+import de.underdocx.common.modifiers.Modifier;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
+import de.underdocx.tools.common.Pair;
 
 import java.net.URL;
-import java.util.Optional;
-import java.util.function.Function;
 
-import static de.underdocx.tools.common.Convenience.build;
+public class ExistingImageModifier<C extends DocContainer<D>, D> implements Modifier<C, SimpleDollarImagePlaceholderData, D, ExistingImageModifierData> {
 
-public class SimpleDollarImageReplaceCommand<C extends DocContainer<D>, D> implements CommandHandler<C, SimpleDollarImagePlaceholderData, D> {
-
-    private final Function<String, Optional<URL>> function;
-    private final boolean keepWidth;
-
-    public SimpleDollarImageReplaceCommand(Function<String, Optional<URL>> function, boolean keepWidth) {
-        this.function = function;
-        this.keepWidth = keepWidth;
-    }
 
     @Override
-    public CommandHandlerResult tryExecuteCommand(Selection<C, SimpleDollarImagePlaceholderData, D> selection) {
-        return build(CommandHandlerResult.IGNORED, result ->
-                function.apply(selection.getPlaceholderData().getVariableName()).ifPresent(url -> {
-                    result.value = CommandHandlerResult.EXECUTED;
-                    new ExistingImageModifier<C, D>().modify(selection, new ExistingImageModifierData.Simple(keepWidth, url));
-                }));
+    public void modify(Selection<C, SimpleDollarImagePlaceholderData, D> selection, ExistingImageModifierData modifierData) {
+        SimpleDollarImagePlaceholderData placeholder = selection.getPlaceholderData();
+        URL importImage = modifierData.getImageURL();
+        Pair<Double, Double> importImageWidthHeight = SimpleDollarImagePlaceholderData.getDimension(importImage);
+        placeholder.exchangeImage(modifierData.getImageURL());
+        if (modifierData.isKeepWidth()) {
+            String newHeightUnit = placeholder.getWidthUnit();
+            double height = placeholder.getWidthValue() * importImageWidthHeight.right / importImageWidthHeight.left;
+            placeholder.setHeight(height, newHeightUnit);
+        } else {
+            String newWidthUnit = placeholder.getHeightUnit();
+            double width = placeholder.getHeightValue() * importImageWidthHeight.left / importImageWidthHeight.right;
+            placeholder.setWidth(width, newWidthUnit);
+        }
     }
 }

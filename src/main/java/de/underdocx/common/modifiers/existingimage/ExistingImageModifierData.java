@@ -22,48 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image;
+package de.underdocx.common.modifiers.existingimage;
 
-import de.underdocx.environment.UnderdocxExecutionException;
-import de.underdocx.tools.common.Pair;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 
-public interface SimpleDollarImagePlaceholderData {
+public interface ExistingImageModifierData {
 
-    String getWidthUnit();
+    URL getImageURL();
 
-    String getWidthAttr();
+    boolean isKeepWidth();
 
-    String getHeightAttr();
+    class Simple implements ExistingImageModifierData {
+        boolean keepWidth;
+        URL imageURL;
 
-    String getName();
+        public Simple(boolean keepWidth, URL imageURL) {
+            this.keepWidth = keepWidth;
+            this.imageURL = imageURL;
+        }
 
-    String getVariableName();
+        @Override
+        public URL getImageURL() {
+            return imageURL;
+        }
 
-    double getWidthValue();
-
-    String getHeightUnit();
-
-    double getHeightValue();
-
-    void setWidth(double value, String unit);
-
-    void setHeight(double value, String unit);
-
-    void exchangeImage(URL imageUrl);
-
-    static Pair<Double, Double> getDimension(URL url) {
-        try {
-            BufferedImage bufferedImage = ImageIO.read(url);
-            return new Pair<>((double) bufferedImage.getWidth(), (double) bufferedImage.getHeight());
-        } catch (IOException e) {
-            throw new UnderdocxExecutionException(e);
+        @Override
+        public boolean isKeepWidth() {
+            return keepWidth;
         }
     }
-
-
 }

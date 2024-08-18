@@ -77,7 +77,7 @@ public class SimpleDollarImagePlaceholdersProvider implements EncapsulatedNodesE
 
     private Optional<SimpleDollarImagePlaceholderData> getImageDate(Node node) {
         return Optional.ofNullable(Convenience.build(w ->
-                getImageElements(node).ifPresent(elements -> w.value = new SimpleDollarImagePlaceholderData(doc, elements))
+                getImageElements(node).ifPresent(elements -> w.value = new SimpleDollarImagePlaceholderDataOdf(doc, elements))
         ));
     }
 
@@ -109,7 +109,7 @@ public class SimpleDollarImagePlaceholdersProvider implements EncapsulatedNodesE
 
     @Override
     public SimpleDollarImagePlaceholderData getPlaceholderData(Node node) {
-        return new SimpleDollarImagePlaceholderData(doc, getImageElements(node).get());
+        return new SimpleDollarImagePlaceholderDataOdf(doc, getImageElements(node).get());
     }
 
     @Override

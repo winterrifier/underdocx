@@ -45,7 +45,7 @@ public class RegexTextDetector implements TextDetector {
 
     @Override
     public TextDetectionResult detect(TextNodePath path) {
-        String text = path.getTextContent().orElse(null);
+        String text = path.fetchTextContent();
         if (text != null) {
             Optional<Pair<Integer, Integer>> match = regex.findFirst(text);
             if (match.isPresent()) {

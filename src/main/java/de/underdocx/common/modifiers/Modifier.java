@@ -22,48 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image;
+package de.underdocx.common.modifiers;
 
-import de.underdocx.environment.UnderdocxExecutionException;
-import de.underdocx.tools.common.Pair;
+import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.Selection;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
+public interface Modifier<C extends DocContainer<D>, P, D, M> {
 
-public interface SimpleDollarImagePlaceholderData {
-
-    String getWidthUnit();
-
-    String getWidthAttr();
-
-    String getHeightAttr();
-
-    String getName();
-
-    String getVariableName();
-
-    double getWidthValue();
-
-    String getHeightUnit();
-
-    double getHeightValue();
-
-    void setWidth(double value, String unit);
-
-    void setHeight(double value, String unit);
-
-    void exchangeImage(URL imageUrl);
-
-    static Pair<Double, Double> getDimension(URL url) {
-        try {
-            BufferedImage bufferedImage = ImageIO.read(url);
-            return new Pair<>((double) bufferedImage.getWidth(), (double) bufferedImage.getHeight());
-        } catch (IOException e) {
-            throw new UnderdocxExecutionException(e);
-        }
-    }
-
-
+    void modify(Selection<C, P, D> selection, M modifierData);
 }
