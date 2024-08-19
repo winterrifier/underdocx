@@ -75,7 +75,9 @@ public abstract class AbstractTest {
 
     protected File createFileInTempDir(String fileName) {
         String tmpDir = System.getProperty("java.io.tmpdir");
-        return new File(tmpDir + "/" + fileName);
+        File result = new File(tmpDir + "/" + fileName);
+        System.out.println("Tmp: " + result);
+        return result;
     }
 
     /*

@@ -43,7 +43,7 @@ public class SimpleDollarImagePlaceholderDataOdf implements SimpleDollarImagePla
 
     private final OdfContainer<?> doc;
     private Pair<DrawFrameElement, DrawImageElement> elements = null;
-    private final static Regex number = new Regex("\\d+");
+    private final static Regex number = new Regex("[0-9]+(\\.[0-9]+)?");
 
     public SimpleDollarImagePlaceholderDataOdf(OdfContainer<?> doc, Pair<DrawFrameElement, DrawImageElement> odfElements) {
         this.doc = doc;
@@ -84,7 +84,7 @@ public class SimpleDollarImagePlaceholderDataOdf implements SimpleDollarImagePla
     }
 
     public double getWidthValue() {
-        return Integer.parseInt(number.findFirstAsString(getWidthAttr()).get());
+        return Double.parseDouble(number.findFirstAsString(getWidthAttr()).get());
     }
 
     public String getHeightUnit() {
@@ -92,7 +92,7 @@ public class SimpleDollarImagePlaceholderDataOdf implements SimpleDollarImagePla
     }
 
     public double getHeightValue() {
-        return Integer.parseInt(number.findFirstAsString(getHeightAttr()).get());
+        return Double.parseDouble(number.findFirstAsString(getHeightAttr()).get());
     }
 
     public void setWidth(double value, String unit) {

@@ -28,6 +28,7 @@ import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.modifiers.Modifier;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
+import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.common.Pair;
 
 import java.net.URL;
@@ -41,13 +42,18 @@ public class ExistingImageModifier<C extends DocContainer<D>, D> implements Modi
         URL importImage = modifierData.getImageURL();
         Pair<Double, Double> importImageWidthHeight = SimpleDollarImagePlaceholderData.getDimension(importImage);
         placeholder.exchangeImage(modifierData.getImageURL());
+        UnderdocxEnv.getInstance().logger.trace("new image dimension; " + importImageWidthHeight);
         if (modifierData.isKeepWidth()) {
             String newHeightUnit = placeholder.getWidthUnit();
+            UnderdocxEnv.getInstance().logger.trace("template image width to keep: " + placeholder.getWidthValue());
             double height = placeholder.getWidthValue() * importImageWidthHeight.right / importImageWidthHeight.left;
+            UnderdocxEnv.getInstance().logger.trace("calculated height: " + height);
             placeholder.setHeight(height, newHeightUnit);
         } else {
             String newWidthUnit = placeholder.getHeightUnit();
+            UnderdocxEnv.getInstance().logger.trace("template image height to keep: " + placeholder.getHeightValue());
             double width = placeholder.getHeightValue() * importImageWidthHeight.left / importImageWidthHeight.right;
+            UnderdocxEnv.getInstance().logger.trace("calculated width: " + width);
             placeholder.setWidth(width, newWidthUnit);
         }
     }

@@ -27,7 +27,14 @@ package de.underdocx.tools.odf;
 import java.util.Optional;
 
 public enum OdfLengthUnit {
-    CM("cm");
+    CM("cm"),
+    MM("mm"),
+    IN("in"),
+    PT("pt"),
+    PC("pc"),
+    PX("px"),
+    EM("em");
+
 
     private final String unitStr;
 

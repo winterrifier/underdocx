@@ -55,7 +55,7 @@ public class Demo_0_2_0_Test extends AbstractOdtTest {
         doc.save(os);
 
         if (UnderdocxEnv.isLibreOfficeInstalled()) {
-            OutputStream pos = new FileOutputStream(createFileInTempDir("demo0.1.0out.pdf"));
+            OutputStream pos = new FileOutputStream(createFileInTempDir("demo0.2.0out.pdf"));
             doc.writePDF(pos);
         }
     }
