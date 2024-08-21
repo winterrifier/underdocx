@@ -103,6 +103,18 @@ public class Convenience {
         return (value == null || value.isEmpty()) ? defaultValue : provider.apply(value.get());
     }
 
+    public static <T> T ifNotNull(T value, Consumer<T> consumer) {
+        return ifIs(value, v -> v != null, v -> {
+            if (v != null) consumer.accept(v);
+        });
+    }
+
+    public static <T> T ifIs(T value, Predicate<T> filter, Consumer<T> consumer) {
+        return also(value, v -> {
+            if (filter.test(v)) consumer.accept(v);
+        });
+    }
+
     public static <T> boolean all(Collection<T> collection, Predicate<T> predicate) {
         if (collection.isEmpty()) return true;
         for (T element : collection) {

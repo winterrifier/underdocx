@@ -24,9 +24,9 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar;
 
+import de.underdocx.common.codec.Codec;
 import de.underdocx.common.doc.odf.OdfContainer;
 import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
-import de.underdocx.common.placeholder.PlaceholderCodec;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.common.placeholder.basic.extraction.RegexExtractor;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdfTextNodeInterpreter;
@@ -35,14 +35,18 @@ import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.Abstra
 import de.underdocx.tools.common.Regex;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
+import java.util.Optional;
+
 public class SimpleDollarPlaceholdersProvider<C extends OdfContainer<D>, D extends OdfDocument> extends AbstractTextualPlaceholdersProvider<C, String, D> {
 
     public static final Regex regex = new Regex("\\$\\w+");
     public static final EncapsulatedNodesExtractor defaultExtractor = createExtractor(new OdfTextNodeInterpreter());
-    public static final PlaceholderCodec<String> codec = new PlaceholderCodec<>() {
+    public static final Codec<String> codec = new Codec<>() {
         @Override
-        public String parse(String string) {
-            return string.substring(1);
+        public Optional<String> parse(String string) {
+            if (string.startsWith("$"))
+                return Optional.of(string.substring(1));
+            else return Optional.empty();
         }
 
         @Override

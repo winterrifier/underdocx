@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.underdocx.common.placeholder;
 
+import de.underdocx.common.codec.Codec;
+import de.underdocx.environment.UnderdocxExecutionException;
 import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.common.Regex;
 import de.underdocx.tools.tree.Nodes;
@@ -34,9 +36,9 @@ import java.util.Optional;
 
 public class TextualPlaceholderToolkit<P> {
     private final EncapsulatedNodesExtractor extractor;
-    private final PlaceholderCodec<P> codec;
+    private final Codec<P> codec;
 
-    public TextualPlaceholderToolkit(EncapsulatedNodesExtractor extractor, PlaceholderCodec<P> codec) {
+    public TextualPlaceholderToolkit(EncapsulatedNodesExtractor extractor, Codec<P> codec) {
         this.codec = codec;
         this.extractor = extractor;
     }
@@ -54,7 +56,7 @@ public class TextualPlaceholderToolkit<P> {
     }
 
     public P parsePlaceholder(Node placeholder) {
-        return codec.parse(getText(placeholder));
+        return UnderdocxExecutionException.expect(codec.parse(getText(placeholder)));
     }
 
     public void setPlaceholder(Node placeholder, P data) {

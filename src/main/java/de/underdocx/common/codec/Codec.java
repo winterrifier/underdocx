@@ -22,13 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.placeholder;
+package de.underdocx.common.codec;
 
 import de.underdocx.environment.UnderdocxExecutionException;
 
-public interface PlaceholderCodec<P> {
+import java.util.Optional;
 
-    P parse(String string);
+public interface Codec<P> {
+
+    Optional<P> parse(String string);
 
     String getTextContent(P data);
 
