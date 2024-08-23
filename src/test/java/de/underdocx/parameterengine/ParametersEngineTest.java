@@ -50,4 +50,21 @@ public class ParametersEngineTest extends AbstractOdtTest {
         assertNoPlaceholders(doc);
     }
 
+    @Test
+    public void testParameterKey() {
+        OdtContainer doc = new OdtContainer("ABC ${Key att1:\"value1\"} XYZ");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.registerParametersCommandHandler(
+                selection -> {
+                    if (selection.getPlaceholderData().getKey().equals("Key")
+                            && new ReplaceWithTextModifier<OdtContainer, ParametersPlaceholderData, OdfTextDocument>()
+                            .modify(selection, "Test"))
+                        return CommandHandler.CommandHandlerResult.EXECUTED;
+                    else return CommandHandler.CommandHandlerResult.IGNORED;
+                });
+        engine.run();
+        assertContains(doc, "ABC Test XYZ");
+        assertNoPlaceholders(doc);
+    }
+
 }
