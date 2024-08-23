@@ -27,10 +27,11 @@ package de.underdocx.parameterengine;
 import de.underdocx.AbstractOdtTest;
 import de.underdocx.DefaultODTEngine;
 import de.underdocx.common.doc.odf.OdtContainer;
+import de.underdocx.common.modifiers.stringmodifier.ReplaceWithTextModifier;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
+import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import org.junit.jupiter.api.Test;
-
-import static de.underdocx.tools.common.Convenience.build;
+import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
 public class ParametersEngineTest extends AbstractOdtTest {
 
@@ -39,13 +40,14 @@ public class ParametersEngineTest extends AbstractOdtTest {
         OdtContainer doc = new OdtContainer("ABC ${Key att1:\"value1\"} XYZ");
         DefaultODTEngine engine = new DefaultODTEngine(doc);
         engine.registerParametersCommandHandler(
-                selection -> build(CommandHandler.CommandHandlerResult.EXECUTED,
-                        w -> selection.getPlaceholderToolkit().ifPresent(
-                                toolkit -> toolkit.replacePlaceholderWithText(
-                                        selection.getNode(),
-                                        selection.getPlaceholderData().getStringAttribute("att1").get()))));
+                selection -> {
+                    String text = selection.getPlaceholderData().getStringAttribute("att1").get();
+                    new ReplaceWithTextModifier<OdtContainer, ParametersPlaceholderData, OdfTextDocument>().modify(selection, text);
+                    return CommandHandler.CommandHandlerResult.EXECUTED;
+                });
         engine.run();
         assertContains(doc, "ABC value1 XYZ");
         assertNoPlaceholders(doc);
     }
+
 }

@@ -27,14 +27,13 @@ package de.underdocx.common.modifiers.stringmodifier;
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.modifiers.Modifier;
 import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
 
 import static de.underdocx.tools.common.Convenience.build;
 
-public class ReplaceWithTextModifier<C extends DocContainer<D>, D> implements Modifier<C, SimpleDollarImagePlaceholderData, D, String> {
+public class ReplaceWithTextModifier<C extends DocContainer<D>, P, D> implements Modifier<C, P, D, String> {
 
     @Override
-    public boolean modify(Selection<C, SimpleDollarImagePlaceholderData, D> selection, String modifierData) {
+    public boolean modify(Selection<C, P, D> selection, String modifierData) {
         return build(false, result ->
                 selection.getPlaceholderToolkit().ifPresent(
                         toolkit -> {
