@@ -21,7 +21,6 @@ Run this code to exchange the placeholders
 OdtContainer doc = new OdtContainer(is);
 DefaultODTEngine engine = new DefaultODTEngine(doc);
 engine.registerSimpleDollarReplacement("name",System.getProperty("user.name"));
-engine.registerSimpleDollarReplacement("date",String.valueOf(new Date()));
 engine.registerSimpleDollarImageReplacement("image", imageURL, true);
 engine.run();
 doc.save(os);
