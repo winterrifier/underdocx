@@ -131,7 +131,7 @@ public class Encapsulator {
     }
 
     private void excludeFirstText() {
-        if (getBeginNodeIndex() != 0) {
+        if (getBeginCharIndex() != 0) {
             Node clone = Nodes.cloneNode(getBeginNode(), getBeginNode(), true, true);
             clone.setNodeValue(getBeginNodeValue().substring(0, getBeginCharIndex()));
             setBeginNodeValue(getBeginNodeValue().substring(getBeginCharIndex()));

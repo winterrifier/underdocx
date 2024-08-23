@@ -35,9 +35,8 @@ import java.net.URL;
 
 public class ExistingImageModifier<C extends DocContainer<D>, D> implements Modifier<C, SimpleDollarImagePlaceholderData, D, ExistingImageModifierData> {
 
-
     @Override
-    public void modify(Selection<C, SimpleDollarImagePlaceholderData, D> selection, ExistingImageModifierData modifierData) {
+    public boolean modify(Selection<C, SimpleDollarImagePlaceholderData, D> selection, ExistingImageModifierData modifierData) {
         SimpleDollarImagePlaceholderData placeholder = selection.getPlaceholderData();
         URL importImage = modifierData.getImageURL();
         Pair<Double, Double> importImageWidthHeight = SimpleDollarImagePlaceholderData.getDimension(importImage);
@@ -56,5 +55,6 @@ public class ExistingImageModifier<C extends DocContainer<D>, D> implements Modi
             UnderdocxEnv.getInstance().logger.trace("calculated width: " + width);
             placeholder.setWidth(width, newWidthUnit);
         }
+        return true;
     }
 }

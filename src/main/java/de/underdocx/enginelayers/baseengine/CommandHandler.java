@@ -31,7 +31,16 @@ public interface CommandHandler<C extends DocContainer<D>, P, D> {
     enum CommandHandlerResult {
         IGNORED,
         EXECUTED,
-        EXECUTED_RESCAN_REQUIRED
+        EXECUTED_RESCAN_REQUIRED;
+
+        static public CommandHandlerResult mapToExecuted(boolean result) {
+            return result ? CommandHandlerResult.EXECUTED : CommandHandlerResult.IGNORED;
+        }
+
+        static public CommandHandlerResult mapToExecutedRescan(boolean result) {
+            return result ? CommandHandlerResult.EXECUTED_RESCAN_REQUIRED : CommandHandlerResult.IGNORED;
+        }
+
     }
 
     CommandHandlerResult tryExecuteCommand(Selection<C, P, D> selection);

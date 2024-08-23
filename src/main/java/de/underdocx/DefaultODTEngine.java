@@ -32,6 +32,9 @@ import de.underdocx.enginelayers.baseengine.internal.commands.SimpleDollarImageR
 import de.underdocx.enginelayers.baseengine.internal.commands.SimpleReplaceFunctionCommand;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholdersProvider;
+import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
+import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderProvider;
+import de.underdocx.enginelayers.parameterengine.commands.CurrentDateCommand;
 import de.underdocx.environment.UnderdocxExecutionException;
 import de.underdocx.tools.common.Regex;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
@@ -46,17 +49,28 @@ public class DefaultODTEngine implements Runnable {
 
     private final SimpleDollarImagePlaceholdersProvider simpleDollarImage;
     private final SimpleDollarPlaceholdersProvider<OdtContainer, OdfTextDocument> simpleDollar;
+    private final ParametersPlaceholderProvider<OdtContainer, OdfTextDocument> parameters;
 
     private final BaseEngine<OdtContainer, OdfTextDocument> engine;
+
+    protected void registerDefaultCommandHandlers() {
+        engine.registerCommandHandler(parameters, new CurrentDateCommand<>());
+    }
 
     public DefaultODTEngine(OdtContainer doc) {
         this.engine = new BaseEngine<>(doc);
         simpleDollar = new SimpleDollarPlaceholdersProvider<>(doc);
         simpleDollarImage = new SimpleDollarImagePlaceholdersProvider(doc);
+        parameters = new ParametersPlaceholderProvider<>(doc);
+        registerDefaultCommandHandlers();
     }
 
     public <P> void registerCommandHandler(PlaceholdersProvider<OdtContainer, P, OdfTextDocument> provider, CommandHandler<OdtContainer, P, OdfTextDocument> commandHandler) {
         this.engine.registerCommandHandler(provider, commandHandler);
+    }
+
+    public void registerParametersCommandHandler(CommandHandler<OdtContainer, ParametersPlaceholderData, OdfTextDocument> commandHandler) {
+        this.engine.registerCommandHandler(parameters, commandHandler);
     }
 
     public void registerSimpleDollarReplaceFunction(Function<String, Optional<String>> replaceFunction) {

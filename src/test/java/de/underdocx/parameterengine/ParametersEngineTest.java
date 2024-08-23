@@ -22,31 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.commands;
+package de.underdocx.parameterengine;
 
-import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.stringmodifier.ReplaceWithTextModifier;
+import de.underdocx.AbstractOdtTest;
+import de.underdocx.DefaultODTEngine;
+import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
-import de.underdocx.enginelayers.baseengine.Selection;
-
-import java.util.Optional;
-import java.util.function.Function;
+import org.junit.jupiter.api.Test;
 
 import static de.underdocx.tools.common.Convenience.build;
 
-public class SimpleReplaceFunctionCommand<C extends DocContainer<D>, D> implements CommandHandler<C, String, D> {
+public class ParametersEngineTest extends AbstractOdtTest {
 
-    private final Function<String, Optional<String>> replaceFunction;
-
-    public SimpleReplaceFunctionCommand(Function<String, Optional<String>> replaceFunction) {
-        this.replaceFunction = replaceFunction;
-    }
-
-    @Override
-    public CommandHandlerResult tryExecuteCommand(Selection<C, String, D> selection) {
-        return build(CommandHandlerResult.IGNORED, result ->
-                replaceFunction.apply(selection.getPlaceholderData()).ifPresent(replacement ->
-                        result.value = CommandHandlerResult.mapToExecuted(new ReplaceWithTextModifier().modify(selection, replacement))
-                ));
+    @Test
+    public void testParametersEngine() {
+        OdtContainer doc = new OdtContainer("ABC ${Key att1:\"value1\"} XYZ");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.registerParametersCommandHandler(
+                selection -> build(CommandHandler.CommandHandlerResult.EXECUTED,
+                        w -> selection.getPlaceholderToolkit().ifPresent(
+                                toolkit -> toolkit.replacePlaceholderWithText(
+                                        selection.getNode(),
+                                        selection.getPlaceholderData().getStringAttribute("att1").get()))));
+        engine.run();
+        assertContains(doc, "ABC value1 XYZ");
+        assertNoPlaceholders(doc);
     }
 }

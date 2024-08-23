@@ -7,7 +7,6 @@ import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpr
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.odf.OdfNodeType;
 import de.underdocx.tools.tree.Nodes;
-import org.assertj.core.api.Assertions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 import org.odftoolkit.odfdom.incubator.search.TextNavigation;
 import org.odftoolkit.odfdom.incubator.search.TextSelection;
@@ -21,6 +20,7 @@ import java.util.regex.Pattern;
 
 import static de.underdocx.tools.common.Convenience.also;
 import static de.underdocx.tools.common.Convenience.buildOptional;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractOdtTest extends AbstractTest {
 
@@ -75,19 +75,19 @@ public class AbstractOdtTest extends AbstractTest {
 
 
     protected void assertContains(OdtContainer doc, String text) {
-        Assertions.assertThat(containsText(doc, text)).isTrue();
+        assertThat(containsText(doc, text)).isTrue();
     }
 
     protected void assertContains(OdfTextDocument doc, String text) {
-        Assertions.assertThat(containsText(doc, text)).isTrue();
+        assertThat(containsText(doc, text)).isTrue();
     }
 
     protected void assertNotContains(OdtContainer doc, String text) {
-        Assertions.assertThat(containsText(doc, text)).isFalse();
+        assertThat(containsText(doc, text)).isFalse();
     }
 
     protected void assertNotContains(OdfTextDocument doc, String text) {
-        Assertions.assertThat(containsText(doc, text)).isFalse();
+        assertThat(containsText(doc, text)).isFalse();
     }
 
     protected void assertFirst(OdtContainer doc, String first, String second) {
@@ -95,7 +95,7 @@ public class AbstractOdtTest extends AbstractTest {
     }
 
     protected void assertFirst(OdfTextDocument doc, String first, String second) {
-        Assertions.assertThat(getOrder(doc, first, second).get()).isLessThan(0);
+        assertThat(getOrder(doc, first, second).get()).isLessThan(0);
     }
 
     protected void assertOrder(OdfTextDocument doc, String... texts) {
@@ -106,6 +106,11 @@ public class AbstractOdtTest extends AbstractTest {
 
     protected void assertOrder(OdtContainer doc, String... texts) {
         assertOrder(doc, texts);
+    }
+
+    protected void assertNoPlaceholders(OdtContainer doc) {
+        assertThat(search(doc.getDocument(), Pattern.compile("\\$\\{.*\\}")).isPresent()).isFalse();
+        assertThat(search(doc.getDocument(), Pattern.compile("\\$\\.*")).isPresent()).isFalse();
     }
 
     /*

@@ -22,22 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.parameterengine.internal;
 
-import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
-import org.w3c.dom.Node;
+import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
+import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 
-import java.util.Optional;
+public class ParametersPlaceholderToolkit extends TextualPlaceholderToolkit<ParametersPlaceholderData> {
+    public static final ParametersPlaceholderToolkit ODF_INSTANCE = new ParametersPlaceholderToolkit();
 
-public interface Selection<C extends DocContainer<D>, P, D> {
+    public ParametersPlaceholderToolkit() {
+        super(ParametersExtractor.ODF_INSTANCE, ParametersPlaceholderCodec.INSTANCE);
+    }
 
-    Node getNode();
-
-    C getDocContainer();
-
-    P getPlaceholderData();
-
-    Optional<TextualPlaceholderToolkit<P>> getPlaceholderToolkit();
-
+    public ParametersPlaceholderToolkit(TextNodeInterpreter interpreter) {
+        super(new ParametersExtractor(interpreter), ParametersPlaceholderCodec.INSTANCE);
+    }
 }

@@ -34,7 +34,8 @@ import static de.underdocx.tools.common.Convenience.buildOptional;
 
 public class ParametersPlaceholderCodec implements Codec<ParametersPlaceholderData> {
 
-    public static JsonCodec codec = new JsonCodec(false, true);
+    public final static JsonCodec JSON_CODEC = new JsonCodec(false, true, true);
+    public final static ParametersPlaceholderCodec INSTANCE = new ParametersPlaceholderCodec();
 
     @Override
     public Optional<ParametersPlaceholderData> parse(String string) {
@@ -45,7 +46,7 @@ public class ParametersPlaceholderCodec implements Codec<ParametersPlaceholderDa
                 if (spaceIndex >= 0) {
                     final String key = trimmedContent.substring(0, spaceIndex).trim();
                     final String jsonString = "{" + trimmedContent.substring(spaceIndex).trim() + "}";
-                    codec.parse(jsonString).ifPresent(json -> w.value = new ParametersPlaceholderData.Simple(key, json));
+                    JSON_CODEC.parse(jsonString).ifPresent(json -> w.value = new ParametersPlaceholderData.Simple(key, json));
                 } else {
                     w.value = new ParametersPlaceholderData.Simple(trimmedContent, null);
                 }
@@ -56,7 +57,7 @@ public class ParametersPlaceholderCodec implements Codec<ParametersPlaceholderDa
     @Override
     public String getTextContent(ParametersPlaceholderData data) {
         if (data.getJson() != null) {
-            String jsonStr = codec.getTextContent(data.getJson());
+            String jsonStr = JSON_CODEC.getTextContent(data.getJson());
             String paramsJson = jsonStr.substring(1, jsonStr.length() - 1);
             return "${" + data.getKey() + " " + paramsJson + "}";
         } else {

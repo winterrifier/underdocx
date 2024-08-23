@@ -38,15 +38,18 @@ public class JsonCodec implements Codec<JsonNode> {
 
     private final boolean isSimplifiedSyntaxAllowed;
     private final boolean pretty;
+    private final boolean exchangeQuotes;
 
     public JsonCodec() {
         pretty = false;
         isSimplifiedSyntaxAllowed = false;
+        exchangeQuotes = false;
     }
 
-    public JsonCodec(boolean pretty, boolean isSimplifiedSyntaxAllowed) {
+    public JsonCodec(boolean pretty, boolean isSimplifiedSyntaxAllowed, boolean exchangeQuotes) {
         this.pretty = pretty;
         this.isSimplifiedSyntaxAllowed = isSimplifiedSyntaxAllowed;
+        this.exchangeQuotes = exchangeQuotes;
     }
 
     @Override
@@ -62,12 +65,23 @@ public class JsonCodec implements Codec<JsonNode> {
                     mapper.enable(JsonReadFeature.ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
                     mapper.enable(JsonReadFeature.ALLOW_TRAILING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
                 }
-                JsonNode node = mapper.readTree(string);
+                JsonNode node = mapper.readTree(checkQuotes(string));
                 w.value = node;
             } catch (JsonProcessingException e) {
                 UnderdocxEnv.getInstance().logger.warn(e);
             }
         });
+    }
+
+    private String checkQuotes(String string) {
+        if (exchangeQuotes) {
+            string = string
+                    .replace('\u201C', '\"')
+                    .replace('\u201D', '\"')
+                    .replace('\u201E', '\"')
+                    .replace('\u201F', '\"');
+        }
+        return string;
     }
 
     @Override

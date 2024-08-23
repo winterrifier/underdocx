@@ -13,7 +13,7 @@ which features are already available and will be released in the future.
 
 Here is a example to load and manipulate a LibreOffice document with two placeholders:
 
-![Unchanged Doc](src/main/resources/demo0.2.0/demo0.2.0unchanged.png)
+![Unchanged Doc](src/main/resources/demo/demoUnchanged.png)
 
 Run this code to exchange the placeholders
 
@@ -28,7 +28,7 @@ doc.save(os);
 ```
 And you get a filled document like this one:
 
-![Changed Doc](src/main/resources/demo0.2.0/demo0.2.0changed.png)
+![Changed Doc](src/main/resources/demo/demoChanged.png)
 
 When LibreOffice is installed and LIBREOFFICE environment variable is set correctly you 
 can also generate a PDF:
@@ -36,4 +36,4 @@ can also generate a PDF:
 ```java
 doc.writePDF(pos);
 ```
-![generated PDF](src/main/resources/demo0.2.0/demo0.2.0pdf.png)
+![generated PDF](src/main/resources/demo/demoPdf.png)

@@ -29,5 +29,5 @@ import de.underdocx.enginelayers.baseengine.Selection;
 
 public interface Modifier<C extends DocContainer<D>, P, D, M> {
 
-    void modify(Selection<C, P, D> selection, M modifierData);
+    boolean modify(Selection<C, P, D> selection, M modifierData);
 }

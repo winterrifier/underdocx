@@ -61,7 +61,7 @@ public class BaseSelection<C extends DocContainer<D>, P, D> implements Selection
     }
 
     @Override
-    public Optional<TextualPlaceholderToolkit<P>> getPlaceholders() {
+    public Optional<TextualPlaceholderToolkit<P>> getPlaceholderToolkit() {
         return Optional.ofNullable(toolkit);
     }
 }
