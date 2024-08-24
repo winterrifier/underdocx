@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.modifiers.existingimage;
+package de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.Modifier;
 import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.baseengine.internal.modifiers.Modifier;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.common.Pair;

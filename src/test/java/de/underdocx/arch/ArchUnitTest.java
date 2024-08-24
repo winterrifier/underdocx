@@ -28,7 +28,6 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
@@ -36,7 +35,7 @@ import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 public class ArchUnitTest {
 
     @Test
-    @Disabled // some layer are missing yet
+
     public void testEngineLayers() {
         JavaClasses imported = new ClassFileImporter()
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)

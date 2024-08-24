@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.modifiers.existingimage;
+package de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage;
 
 import java.net.URL;
 

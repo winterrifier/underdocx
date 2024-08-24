@@ -25,10 +25,10 @@ SOFTWARE.
 package de.underdocx.enginelayers.baseengine.internal.commands;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.existingimage.ExistingImageModifier;
-import de.underdocx.common.modifiers.existingimage.ExistingImageModifierData;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage.ExistingImageModifier;
+import de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage.ExistingImageModifierData;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
 
 import java.net.URL;

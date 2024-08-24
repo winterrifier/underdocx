@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.modifiers;
+package de.underdocx.enginelayers.baseengine.internal.modifiers;
 
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.Selection;

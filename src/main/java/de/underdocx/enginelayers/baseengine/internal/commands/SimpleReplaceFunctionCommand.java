@@ -25,9 +25,9 @@ SOFTWARE.
 package de.underdocx.enginelayers.baseengine.internal.commands;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.stringmodifier.ReplaceWithTextModifier;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.baseengine.internal.modifiers.stringmodifier.ReplaceWithTextModifier;
 
 import java.util.Optional;
 import java.util.function.Function;

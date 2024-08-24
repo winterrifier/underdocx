@@ -22,23 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.common.modifiers.stringmodifier;
+package de.underdocx.enginelayers.modelengine;
 
-import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.modifiers.Modifier;
-import de.underdocx.enginelayers.baseengine.Selection;
-
-import static de.underdocx.tools.common.Convenience.build;
-
-public class ReplaceWithTextModifier<C extends DocContainer<D>, P, D> implements Modifier<C, P, D, String> {
-
-    @Override
-    public boolean modify(Selection<C, P, D> selection, String modifierData) {
-        return build(false, result ->
-                selection.getPlaceholderToolkit().ifPresent(
-                        toolkit -> {
-                            toolkit.replacePlaceholderWithText(selection.getNode(), modifierData);
-                            result.value = true;
-                        }));
-    }
+public class ModelEngine {
 }
