@@ -26,16 +26,17 @@ package de.underdocx.enginelayers.modelengine.model.reflection;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.environment.UnderdocxEnv;
-import de.underdocx.tools.common.Convenience;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static de.underdocx.tools.common.Convenience.*;
+
 public class ReflectionModelNode implements ModelNode {
 
     private final Object containedValue;
-    private final ModelNode parent;
+    protected ModelNode parent;
 
     public ReflectionModelNode(Object object) {
         this.containedValue = object;
@@ -43,7 +44,7 @@ public class ReflectionModelNode implements ModelNode {
     }
 
     protected ReflectionModelNode create(Object object) {
-        return new ReflectionModelNode(object);
+        return also(new ReflectionModelNode(object), result -> result.parent = this);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class ReflectionModelNode implements ModelNode {
         } else if (getValue() instanceof Map<?, ?>) {
             return create(((Map<?, ?>) containedValue).get(name));
         } else {
-            return Convenience.build(
+            return build(
                     w -> findField(name).ifPresentOrElse(
                             field -> readField(field).ifPresent(
                                     result -> w.value = result),
@@ -162,7 +163,7 @@ public class ReflectionModelNode implements ModelNode {
     }
 
     protected Optional<Method> findGetMethod(String name) {
-        return Convenience.findFirst(Arrays.asList(containedValue.getClass().getMethods()), method -> {
+        return findFirst(Arrays.asList(containedValue.getClass().getMethods()), method -> {
             boolean nameFits = method.getName().toLowerCase().equals(name.toLowerCase()) ||
                     method.getName().toLowerCase().equals(("get" + name).toLowerCase()) ||
                     method.getName().toLowerCase().equals(("is" + name).toLowerCase());
@@ -185,7 +186,7 @@ public class ReflectionModelNode implements ModelNode {
     }
 
     protected Optional<Field> findField(String name) {
-        return Convenience.findFirst(Arrays.asList(containedValue.getClass().getFields()),
+        return findFirst(Arrays.asList(containedValue.getClass().getFields()),
                 field -> field.getName().toLowerCase().equals(name.toLowerCase()) ||
                         field.getName().toLowerCase().equals(("is" + name).toLowerCase()));
     }
