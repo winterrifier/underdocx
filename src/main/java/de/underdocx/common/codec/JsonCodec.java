@@ -31,7 +31,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.environment.UnderdocxExecutionException;
 import de.underdocx.tools.common.Convenience;
+import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
 
 public class JsonCodec implements Codec<JsonNode> {
@@ -39,36 +44,39 @@ public class JsonCodec implements Codec<JsonNode> {
     private final boolean isSimplifiedSyntaxAllowed;
     private final boolean pretty;
     private final boolean exchangeQuotes;
+    private ObjectMapper mapper;
 
     public JsonCodec() {
-        pretty = false;
-        isSimplifiedSyntaxAllowed = false;
-        exchangeQuotes = false;
+        this(false, false, false);
     }
 
     public JsonCodec(boolean pretty, boolean isSimplifiedSyntaxAllowed, boolean exchangeQuotes) {
         this.pretty = pretty;
         this.isSimplifiedSyntaxAllowed = isSimplifiedSyntaxAllowed;
         this.exchangeQuotes = exchangeQuotes;
+        this.mapper = createMapper();
     }
 
     @Override
     public Optional<JsonNode> parse(String string) {
         return Convenience.buildOptional(w -> {
             try {
-                ObjectMapper mapper = new ObjectMapper();
-                if (isSimplifiedSyntaxAllowed) {
-                    mapper.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES.mappedFeature());
-                    mapper.enable(JsonReadFeature.ALLOW_JAVA_COMMENTS.mappedFeature());
-                    mapper.enable(JsonReadFeature.ALLOW_TRAILING_COMMA.mappedFeature());
-                    mapper.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES.mappedFeature());
-                    mapper.enable(JsonReadFeature.ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
-                    mapper.enable(JsonReadFeature.ALLOW_TRAILING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
-                }
-                JsonNode node = mapper.readTree(checkQuotes(string));
-                w.value = node;
+                w.value = mapper.readTree(checkQuotes(string));
             } catch (JsonProcessingException e) {
                 UnderdocxEnv.getInstance().logger.warn(e);
+            }
+        });
+    }
+
+    private ObjectMapper createMapper() {
+        return Convenience.also(new ObjectMapper(), mapper -> {
+            if (isSimplifiedSyntaxAllowed) {
+                mapper.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES.mappedFeature());
+                mapper.enable(JsonReadFeature.ALLOW_JAVA_COMMENTS.mappedFeature());
+                mapper.enable(JsonReadFeature.ALLOW_TRAILING_COMMA.mappedFeature());
+                mapper.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES.mappedFeature());
+                mapper.enable(JsonReadFeature.ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
+                mapper.enable(JsonReadFeature.ALLOW_TRAILING_DECIMAL_POINT_FOR_NUMBERS.mappedFeature());
             }
         });
     }
@@ -88,9 +96,9 @@ public class JsonCodec implements Codec<JsonNode> {
     public String getTextContent(JsonNode data) {
         try {
             if (pretty) {
-                return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(data);
+                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
             } else {
-                return new ObjectMapper().writeValueAsString(data);
+                return mapper.writeValueAsString(data);
             }
         } catch (JsonProcessingException e) {
             throw new UnderdocxExecutionException(e);
@@ -98,4 +106,32 @@ public class JsonCodec implements Codec<JsonNode> {
     }
 
 
+    public Map<String, Object> getAsMap(JsonNode data) {
+        return mapper.convertValue(data, Map.class);
+    }
+
+    public Optional<Map<String, Object>> getAsMap(String data) {
+        return Convenience.buildOptional(w -> parse(data).ifPresent(json -> w.value = getAsMap(json)));
+    }
+
+    public Optional<Map<String, Object>> getAsMap(InputStream is) {
+        String content = null;
+        try {
+            content = IOUtils.toString(is, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            UnderdocxEnv.getInstance().logger.warn(e);
+            return Optional.empty();
+        }
+        return getAsMap(content);
+    }
+
+    public Optional<String> convertMapToJsonString(Object mapStructure) {
+        try {
+            JsonNode tree = mapper.valueToTree(mapStructure);
+            return Optional.of(getTextContent(tree));
+        } catch (Exception e) {
+            UnderdocxEnv.getInstance().logger.warn(e);
+            return Optional.empty();
+        }
+    }
 }
