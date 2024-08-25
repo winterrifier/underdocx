@@ -22,14 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelpath.parser;
+package de.underdocx.enginelayers.modelengine.modelaccess;
 
-public class ModelPathParseException extends Exception {
-    public ModelPathParseException(String message, Exception e) {
-        super(message, e);
-    }
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
-    public ModelPathParseException(String message) {
-        super(message);
-    }
+import java.util.Optional;
+
+public interface ModelAccess {
+
+    ModelNode getCurrentModelNode();
+
+    Optional<ModelNode> interpret(String path, boolean setAsCurrent);
+    
 }

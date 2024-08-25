@@ -24,5 +24,44 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.modelengine;
 
-public class ModelEngine {
+import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.BaseEngine;
+import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
+import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
+import de.underdocx.enginelayers.modelengine.modelaccess.internal.DefaultModelAccess;
+import org.w3c.dom.Node;
+
+public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
+
+    protected ModelNode model = new MapModelNode();
+    protected ModelNode currentModelNode = model;
+
+    public ModelEngine(DocContainer doc) {
+        super(doc);
+    }
+
+    public void setModel(ModelNode model) {
+        this.model = model;
+        currentModelNode = model;
+    }
+
+
+    @Override
+    protected Selection createSelection(PlaceholdersProvider provider, Node node) {
+        Selection baseSelection = super.createSelection(provider, node);
+        return new MSelectionWrapper(baseSelection, new ModelEngineModelAccess());
+    }
+
+    private class ModelEngineModelAccess extends DefaultModelAccess {
+        public ModelEngineModelAccess() {
+            super(() -> currentModelNode, newModelNode -> currentModelNode = newModelNode);
+        }
+    }
+
+    public <X> BaseEngine<C, D> registerCommandHandler(PlaceholdersProvider<C, X, D> provider, MCommandHandler<C, X, D> commandHandler) {
+        return super.registerCommandHandler(provider, commandHandler);
+    }
 }

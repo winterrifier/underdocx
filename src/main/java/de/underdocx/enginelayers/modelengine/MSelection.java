@@ -22,25 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelpath.elements;
+package de.underdocx.enginelayers.modelengine;
 
-import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
 
 import java.util.Optional;
 
-public class BackModelPathElement implements ModelPathElement {
+public interface MSelection<C extends DocContainer<D>, P, D> extends Selection<C, P, D> {
 
-    public String toString() {
-        return getType().toString();
-    }
-
-    @Override
-    public ModelPathElementType getType() {
-        return ModelPathElementType.BACK;
-    }
-
-    @Override
-    public Optional<ModelNode> interpret(ModelNode node) {
-        return Optional.ofNullable(node.getParent());
-    }
+    Optional<ModelAccess> getModelAccess();
 }

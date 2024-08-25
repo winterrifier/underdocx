@@ -161,7 +161,7 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
             method.setAccessible(true);
             result = method.invoke(containedValue);
         } catch (Exception e) {
-            UnderdocxEnv.getInstance().logger.warn(e);
+            UnderdocxEnv.getInstance().logger.error(e);
             return Optional.empty();
         }
         return Optional.of(create(result));
@@ -184,7 +184,7 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
             field.setAccessible(true);
             result = field.get(containedValue);
         } catch (Exception e) {
-            UnderdocxEnv.getInstance().logger.warn(e);
+            UnderdocxEnv.getInstance().logger.error(e);
             return Optional.empty();
         }
         return Optional.of(create(result));

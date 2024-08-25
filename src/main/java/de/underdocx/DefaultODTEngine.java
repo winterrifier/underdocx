@@ -25,13 +25,14 @@ SOFTWARE.
 package de.underdocx;
 
 import de.underdocx.common.doc.odf.OdtContainer;
-import de.underdocx.enginelayers.baseengine.BaseEngine;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.internal.commands.SimpleDollarImageReplaceCommand;
 import de.underdocx.enginelayers.baseengine.internal.commands.SimpleReplaceFunctionCommand;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholdersProvider;
+import de.underdocx.enginelayers.modelengine.MCommandHandler;
+import de.underdocx.enginelayers.modelengine.ModelEngine;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderProvider;
 import de.underdocx.enginelayers.parameterengine.commands.CurrentDateCommand;
@@ -51,14 +52,14 @@ public class DefaultODTEngine implements Runnable {
     private final SimpleDollarPlaceholdersProvider<OdtContainer, OdfTextDocument> simpleDollar;
     private final ParametersPlaceholderProvider<OdtContainer, OdfTextDocument> parameters;
 
-    private final BaseEngine<OdtContainer, OdfTextDocument> engine;
+    private final ModelEngine<OdtContainer, OdfTextDocument> engine;
 
     protected void registerDefaultCommandHandlers() {
         engine.registerCommandHandler(parameters, new CurrentDateCommand<>());
     }
 
     public DefaultODTEngine(OdtContainer doc) {
-        this.engine = new BaseEngine<>(doc);
+        this.engine = new ModelEngine<>(doc);
         simpleDollar = new SimpleDollarPlaceholdersProvider<>(doc);
         simpleDollarImage = new SimpleDollarImagePlaceholdersProvider(doc);
         parameters = new ParametersPlaceholderProvider<>(doc);
@@ -69,7 +70,7 @@ public class DefaultODTEngine implements Runnable {
         this.engine.registerCommandHandler(provider, commandHandler);
     }
 
-    public void registerParametersCommandHandler(CommandHandler<OdtContainer, ParametersPlaceholderData, OdfTextDocument> commandHandler) {
+    public void registerParametersCommandHandler(MCommandHandler<OdtContainer, ParametersPlaceholderData, OdfTextDocument> commandHandler) {
         this.engine.registerCommandHandler(parameters, commandHandler);
     }
 

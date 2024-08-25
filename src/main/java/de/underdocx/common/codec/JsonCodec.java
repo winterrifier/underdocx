@@ -119,7 +119,7 @@ public class JsonCodec implements Codec<JsonNode> {
         try {
             content = IOUtils.toString(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            UnderdocxEnv.getInstance().logger.warn(e);
+            UnderdocxEnv.getInstance().logger.error(e);
             return Optional.empty();
         }
         return getAsMap(content);
@@ -130,7 +130,7 @@ public class JsonCodec implements Codec<JsonNode> {
             JsonNode tree = mapper.valueToTree(mapStructure);
             return Optional.of(getTextContent(tree));
         } catch (Exception e) {
-            UnderdocxEnv.getInstance().logger.warn(e);
+            UnderdocxEnv.getInstance().logger.error(e);
             return Optional.empty();
         }
     }

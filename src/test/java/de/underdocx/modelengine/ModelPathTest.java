@@ -25,9 +25,9 @@ SOFTWARE.
 package de.underdocx.modelengine;
 
 import de.underdocx.AbstractTest;
+import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
-import de.underdocx.enginelayers.modelengine.modelpath.ModelPath;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

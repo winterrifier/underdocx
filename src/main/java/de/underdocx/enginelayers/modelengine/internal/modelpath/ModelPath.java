@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelpath;
+package de.underdocx.enginelayers.modelengine.internal.modelpath;
 
+import de.underdocx.enginelayers.modelengine.internal.modelpath.elements.ModelPathElement;
+import de.underdocx.enginelayers.modelengine.internal.modelpath.parser.ModelPathCodec;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
-import de.underdocx.enginelayers.modelengine.modelpath.elements.ModelPathElement;
-import de.underdocx.enginelayers.modelengine.modelpath.parser.ModelPathCodec;
 import de.underdocx.environment.UnderdocxExecutionException;
 import de.underdocx.tools.common.Convenience;
 

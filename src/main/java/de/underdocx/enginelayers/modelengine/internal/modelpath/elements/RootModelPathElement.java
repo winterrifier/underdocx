@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelpath.elements;
+package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
@@ -30,28 +30,24 @@ import java.util.Optional;
 
 import static de.underdocx.tools.common.Convenience.buildOptional;
 
-public class IndexModelPathElement implements ModelPathElement {
-    private final int index;
-
-    public int getIndex() {
-        return index;
-    }
-
-    public IndexModelPathElement(int index) {
-        this.index = index;
-    }
+public class RootModelPathElement implements ModelPathElement {
 
     public String toString() {
-        return "[" + index + "]";
+        return getType().toString();
     }
+
 
     @Override
     public ModelPathElementType getType() {
-        return ModelPathElementType.INDEX;
+        return ModelPathElementType.ROOT;
     }
 
     @Override
     public Optional<ModelNode> interpret(ModelNode node) {
-        return buildOptional(w -> w.value = node.hasProperty(index) ? node.getProperty(index) : null);
+        return buildOptional(node, w -> {
+            while (w.value.getParent() != null) {
+                w.value = w.value.getParent();
+            }
+        });
     }
 }

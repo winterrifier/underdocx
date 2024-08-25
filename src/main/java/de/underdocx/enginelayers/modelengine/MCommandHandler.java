@@ -22,18 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelpath.elements;
+package de.underdocx.enginelayers.modelengine;
 
-public enum ModelPathElementType {
-    BACK("<"), ROOT("^"), INDEX("[]"), PROPERTY("*");
+import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.CommandHandler;
+import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
 
-    private final String str;
+public interface MCommandHandler<C extends DocContainer<D>, P, D> extends CommandHandler<C, P, D> {
 
-    ModelPathElementType(String s) {
-        this.str = s;
+    default CommandHandlerResult tryExecuteCommand(Selection<C, P, D> selection) {
+        return (selection instanceof MSelection<C, P, D>)
+                ? tryExecuteCommand((MSelection<C, P, D>) selection)
+                : tryExecuteCommand(new MSelectionWrapper<>(selection));
     }
 
-    public String toString() {
-        return str;
-    }
+    CommandHandlerResult tryExecuteCommand(MSelection<C, P, D> selection);
+
 }
