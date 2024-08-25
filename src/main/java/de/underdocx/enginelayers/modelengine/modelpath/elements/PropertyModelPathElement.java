@@ -22,25 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.tools.common;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
+
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
 import java.util.Optional;
 
-public class Wrapper<T> {
-    public T value;
+import static de.underdocx.tools.common.Convenience.buildOptional;
 
-    public Wrapper() {
+public class PropertyModelPathElement implements ModelPathElement {
+    private final String property;
+
+    public String getProperty() {
+        return property;
     }
 
-    public Wrapper(T value) {
-        this.value = value;
-    }
-
-    public Optional<T> toOptional() {
-        return Optional.ofNullable(value);
+    public PropertyModelPathElement(String property) {
+        this.property = property;
     }
 
     public String toString() {
-        return String.valueOf(value);
+        return property;
+    }
+
+
+    @Override
+    public ModelPathElementType getType() {
+        return ModelPathElementType.PROPERTY;
+    }
+
+    @Override
+    public Optional<ModelNode> interpret(ModelNode node) {
+        return buildOptional(w -> w.value = node.hasProperty(property) ? node.getProperty(property) : null);
     }
 }

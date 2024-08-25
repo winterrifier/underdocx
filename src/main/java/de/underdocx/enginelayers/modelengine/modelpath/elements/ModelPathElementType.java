@@ -22,25 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.tools.common;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
 
-import java.util.Optional;
+public enum ModelPathElementType {
+    BACK("<"), ROOT("^"), INDEX("[]"), PROPERTY("*");
 
-public class Wrapper<T> {
-    public T value;
+    private final String str;
 
-    public Wrapper() {
-    }
-
-    public Wrapper(T value) {
-        this.value = value;
-    }
-
-    public Optional<T> toOptional() {
-        return Optional.ofNullable(value);
+    ModelPathElementType(String s) {
+        this.str = s;
     }
 
     public String toString() {
-        return String.valueOf(value);
+        return str;
     }
 }

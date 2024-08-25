@@ -27,7 +27,7 @@ package de.underdocx.enginelayers.modelengine.model.simple;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListModelNode extends AbstractModelNode<List<AbstractModelNode<?>>> {
+public class ListModelNode extends AbstractPredefinedModelNode<List<AbstractModelNode<?>>> {
 
     public ListModelNode() {
         this.containedValue = new ArrayList<>();
@@ -54,7 +54,7 @@ public class ListModelNode extends AbstractModelNode<List<AbstractModelNode<?>>>
         return index < containedValue.size();
     }
 
-    public <T extends AbstractModelNode<?>> void add(T node) {
+    public <T extends AbstractPredefinedModelNode<?>> void add(T node) {
         checkParentOfChild(node);
         node.setParent(this);
         containedValue.add(node);

@@ -22,25 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.tools.common;
+package de.underdocx.enginelayers.modelengine.modelpath.parser;
 
-import java.util.Optional;
-
-public class Wrapper<T> {
-    public T value;
-
-    public Wrapper() {
+public class ModelPathParseException extends Exception {
+    public ModelPathParseException(String message, Exception e) {
+        super(message, e);
     }
 
-    public Wrapper(T value) {
-        this.value = value;
-    }
-
-    public Optional<T> toOptional() {
-        return Optional.ofNullable(value);
-    }
-
-    public String toString() {
-        return String.valueOf(value);
+    public ModelPathParseException(String message) {
+        super(message);
     }
 }

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.model.reflection;
+package de.underdocx.enginelayers.modelengine.model.simple;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.environment.UnderdocxEnv;
@@ -33,7 +33,7 @@ import java.util.*;
 
 import static de.underdocx.tools.common.Convenience.*;
 
-public class ReflectionModelNode implements ModelNode {
+public class ReflectionModelNode extends AbstractModelNode<Object> implements ModelNode {
 
     private final Object containedValue;
     protected ModelNode parent;
@@ -43,6 +43,7 @@ public class ReflectionModelNode implements ModelNode {
         this.parent = null;
     }
 
+    @Override
     protected ReflectionModelNode create(Object object) {
         return also(new ReflectionModelNode(object), result -> result.parent = this);
     }
@@ -70,6 +71,10 @@ public class ReflectionModelNode implements ModelNode {
         } else {
             return ModelNodeType.MAP;
         }
+    }
+
+    @Override
+    protected void removeChild(AbstractModelNode<?> node) {
     }
 
     @Override
@@ -164,9 +169,9 @@ public class ReflectionModelNode implements ModelNode {
 
     protected Optional<Method> findGetMethod(String name) {
         return findFirst(Arrays.asList(containedValue.getClass().getMethods()), method -> {
-            boolean nameFits = method.getName().toLowerCase().equals(name.toLowerCase()) ||
-                    method.getName().toLowerCase().equals(("get" + name).toLowerCase()) ||
-                    method.getName().toLowerCase().equals(("is" + name).toLowerCase());
+            boolean nameFits = method.getName().equalsIgnoreCase(name) ||
+                    method.getName().equalsIgnoreCase(("get" + name)) ||
+                    method.getName().equalsIgnoreCase(("is" + name));
             boolean returnFits = method.getReturnType() != Void.class;
             boolean parametersFits = method.getParameterTypes().length == 0;
             return nameFits && returnFits && parametersFits;
@@ -187,8 +192,8 @@ public class ReflectionModelNode implements ModelNode {
 
     protected Optional<Field> findField(String name) {
         return findFirst(Arrays.asList(containedValue.getClass().getFields()),
-                field -> field.getName().toLowerCase().equals(name.toLowerCase()) ||
-                        field.getName().toLowerCase().equals(("is" + name).toLowerCase()));
+                field -> field.getName().equalsIgnoreCase(name) ||
+                        field.getName().equalsIgnoreCase(("is" + name)));
     }
 
     public String toString() {

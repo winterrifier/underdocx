@@ -26,7 +26,7 @@ package de.underdocx.modelengine;
 
 import de.underdocx.AbstractTest;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
-import de.underdocx.enginelayers.modelengine.model.reflection.ReflectionModelNode;
+import de.underdocx.enginelayers.modelengine.model.simple.ReflectionModelNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

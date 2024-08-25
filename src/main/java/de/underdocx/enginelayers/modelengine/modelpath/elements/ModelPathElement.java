@@ -22,11 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.model.simple;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
 
-public class NullModelNode extends LeafModelNode<Object> {
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
-    public NullModelNode() {
-        super(null);
-    }
+import java.util.Optional;
+
+public interface ModelPathElement {
+
+    ModelPathElementType getType();
+
+    Optional<ModelNode> interpret(ModelNode node);
+
 }

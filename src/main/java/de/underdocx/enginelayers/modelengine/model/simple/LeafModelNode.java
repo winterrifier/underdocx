@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.modelengine.model.simple;
 
-public class LeafModelNode<T> extends AbstractModelNode<T> {
+public class LeafModelNode<T> extends AbstractPredefinedModelNode<T> {
 
     public LeafModelNode(T value) {
         this.containedValue = value;

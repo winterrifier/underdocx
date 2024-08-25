@@ -29,23 +29,26 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class MapModelNode extends AbstractModelNode<Map<String, AbstractModelNode<?>>> {
+public class MapModelNode extends AbstractPredefinedModelNode<Map<String, AbstractModelNode<?>>> {
 
 
     public MapModelNode() {
         this.containedValue = new LinkedHashMap<>();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public MapModelNode(InputStream is) {
         this(jsonCodec.getAsMap(is).get());
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public MapModelNode(String jsonString) {
         this(jsonCodec.getAsMap(jsonString).get());
     }
 
     public MapModelNode(Map<String, Object> map) {
         if (map != null)
+            //noinspection unchecked
             this.containedValue = (Map<String, AbstractModelNode<?>>) create(map).containedValue;
         else
             this.containedValue = new LinkedHashMap<>();
