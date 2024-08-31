@@ -27,16 +27,15 @@ package de.underdocx.common.placeholder.basic.extraction;
 import de.underdocx.common.placeholder.basic.detection.TextDetectionResult;
 import de.underdocx.common.placeholder.basic.detection.TextDetector;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.TextNodeInterpreter;
-import de.underdocx.tools.tree.Enumerator;
 import de.underdocx.tools.tree.TreeWalker;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import de.underdocx.tools.tree.nodepath.TextNodePath;
 import de.underdocx.tools.tree.nodepath.TreeNodeCollector;
 import org.w3c.dom.Node;
 
 import java.util.List;
 
-import static de.underdocx.tools.common.Convenience.also;
-import static de.underdocx.tools.common.Convenience.buildList;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class AbstractFullPathExtractor extends AbstractExtractor {
 

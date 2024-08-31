@@ -25,17 +25,23 @@ SOFTWARE.
 package de.underdocx.enginelayers.baseengine;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.enginelayers.baseengine.internal.BaseSelection;
+import de.underdocx.enginelayers.baseengine.internal.EngineAccessImpl;
+import de.underdocx.enginelayers.baseengine.internal.PlaceholdersEnumerator;
+import de.underdocx.enginelayers.baseengine.internal.SelectionImpl;
+import de.underdocx.enginelayers.baseengine.modifiers.EngineListener;
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.common.Pair;
-import de.underdocx.tools.tree.Enumerator;
+import de.underdocx.tools.tree.enumerator.LookAheadEnumerator;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
-import static de.underdocx.tools.common.Convenience.build;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
 
@@ -45,19 +51,22 @@ public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
     protected boolean errDetected = false;
     protected boolean rescan = true;
 
+    protected ArrayListValuedHashMap<PlaceholdersProvider<C, ?, D>, CommandHandler<C, ?, D>> registry = new ArrayListValuedHashMap<>();
+    protected LinkedHashSet<EngineListener<C, D>> listeners = new LinkedHashSet<>();
+
+
     public BaseEngine(C doc) {
         this.doc = doc;
     }
 
-    protected ArrayListValuedHashMap<PlaceholdersProvider<C, ?, D>, CommandHandler<C, ?, D>> registry = new ArrayListValuedHashMap<>();
 
     public <X> BaseEngine<C, D> registerCommandHandler(PlaceholdersProvider<C, X, D> provider, CommandHandler<C, X, D> commandHandler) {
         registry.put(provider, commandHandler);
         return this;
     }
 
-    protected Enumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> createPlaceholdersEnumerator() {
-        return new PlaceholdersEnumerator<>(registry.keySet());
+    protected LookAheadEnumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> createPlaceholdersEnumerator() {
+        return new PlaceholdersEnumerator<>(registry.keySet()).toLookAheadEnumerator();
     }
 
     protected CommandHandler.CommandHandlerResult findAndExecCommandHandler(PlaceholdersProvider<C, ?, D> provider, Selection<C, ?, D> selection) {
@@ -72,8 +81,8 @@ public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
         });
     }
 
-    protected Selection<C, ?, D> createSelection(PlaceholdersProvider<C, ?, D> provider, Node node) {
-        return new BaseSelection(doc, node, provider.getPlaceholderData(node), provider.getPlaceholderToolkit().orElse(null));
+    protected Selection<C, ?, D> createSelection(PlaceholdersProvider<C, ?, D> provider, Node node, EngineAccess<C, D> engineAccess) {
+        return new SelectionImpl<>(doc, node, provider, engineAccess);
     }
 
     protected void stepExecuted(Selection<C, ?, D> selection) {
@@ -118,15 +127,24 @@ public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
 
     protected void runUncatched() {
         while (rescan && !errDetected) {
-            Enumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> enumerator = createPlaceholdersEnumerator();
+            LookAheadEnumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> enumerator = createPlaceholdersEnumerator();
+            List<Node> visited = new ArrayList<>();
             rescan = false;
+            EngineAccess<C, D> engineAccess = new EngineAccessImpl<>(listeners, () -> rescan = true, enumerator, visited);
             while (!rescan && !errDetected && enumerator.hasNext()) {
                 step++;
                 Pair<PlaceholdersProvider<C, ?, D>, Node> placeholder = enumerator.next();
-                Selection<C, ?, D> selection = createSelection(placeholder.left, placeholder.right);
+                Selection<C, ?, D> selection = createSelection(placeholder.left, placeholder.right, engineAccess);
                 CommandHandler.CommandHandlerResult executionResult = findAndExecCommandHandler(placeholder.left, selection);
                 reactOnExecutionResult(executionResult, selection);
+                visited.add(selection.getNode());
             }
+
+            listeners.forEach(listener -> {
+                if (!errDetected && !rescan) {
+                    listener.eodReached(doc, engineAccess);
+                }
+            });
         }
     }
 }

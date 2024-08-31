@@ -28,7 +28,7 @@ import de.underdocx.common.doc.odf.OdfContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.tools.odf.ParagraphByParagraphNodesEnumerator;
-import de.underdocx.tools.tree.Enumerator;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.w3c.dom.Node;
 

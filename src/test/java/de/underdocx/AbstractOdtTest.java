@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static de.underdocx.tools.common.Convenience.also;
-import static de.underdocx.tools.common.Convenience.buildOptional;
+import static de.underdocx.tools.common.Convenience.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractOdtTest extends AbstractTest {
@@ -40,7 +39,6 @@ public class AbstractOdtTest extends AbstractTest {
 
     protected Optional<TextSelection> search(OdfTextDocument doc, Pattern pattern) {
         TextNavigation searcher = new TextNavigation(pattern, doc);
-        boolean hasNext = searcher.hasNext();
         return searcher.hasNext() ? Optional.of(searcher.next()) : Optional.empty();
     }
 

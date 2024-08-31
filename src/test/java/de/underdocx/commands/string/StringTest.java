@@ -22,42 +22,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.demo;
+package de.underdocx.commands.string;
 
 import de.underdocx.AbstractOdtTest;
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.enginelayers.defaultodtengine.DefaultODTEngine;
-import de.underdocx.environment.UnderdocxEnv;
+import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-
-public class Demo_0_2_0_Test extends AbstractOdtTest {
+public class StringTest extends AbstractOdtTest {
 
     @Test
-    public void testDemoDoc() throws IOException {
-        InputStream is = getResource("demo0.2.0.odt");
-        String imageURL = createTmpUri(getResource("smile.png"), "png");
-        OutputStream os = new FileOutputStream(createFileInTempDir("demo0.2.0out.odt"));
-
-
-        OdtContainer doc = new OdtContainer(is);
+    public void testModeString() {
+        String jsonString = """
+                {
+                  "a":{
+                    "b":["Test0", "Test1"]
+                  },
+                  "c":{
+                    "d":["Test2", "Test3"]
+                  }
+                }
+                """;
+        String documentStr = "" +
+                "A ${String @value:\"a.b[0]\"} A       \n" +
+                "${Model value:\"a.b[0]\"}             \n" +
+                "B ${String} B                         \n" +
+                "C ${String @value:\"^c.d[1]\"} C      \n" +
+                "D ${String @value:\"^no\"} D          \n";
+        OdtContainer doc = new OdtContainer(documentStr);
+        show(doc);
         DefaultODTEngine engine = new DefaultODTEngine(doc);
-        engine.registerSimpleDollarReplacement("name", System.getProperty("user.name"));
-        engine.registerSimpleDollarReplacement("date", String.valueOf(new Date()));
-        engine.registerSimpleDollarImageReplacement("image", imageURL, true);
+        engine.setModel(new MapModelNode(jsonString));
         engine.run();
         show(doc);
-        doc.save(os);
-
-        if (UnderdocxEnv.isLibreOfficeInstalled()) {
-            OutputStream pos = new FileOutputStream(createFileInTempDir("demo0.2.0out.pdf"));
-            doc.writePDF(pos);
-        }
+        assertContains(doc, "A Test0 A");
+        assertContains(doc, "B Test0 B");
+        assertContains(doc, "C Test3 C");
+        assertContains(doc, "D  D");
+        assertNoPlaceholders(doc);
     }
-
 }

@@ -24,8 +24,8 @@ SOFTWARE.
 
 package de.underdocx.tools.tree.nodepath;
 
-import de.underdocx.tools.tree.Enumerator;
 import de.underdocx.tools.tree.TreeWalker;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static de.underdocx.tools.common.Convenience.also;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class TreeNodeCollector implements Enumerator<Node> {
 

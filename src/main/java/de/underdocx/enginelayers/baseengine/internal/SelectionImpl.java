@@ -25,29 +25,21 @@ SOFTWARE.
 package de.underdocx.enginelayers.baseengine.internal;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
+import de.underdocx.enginelayers.baseengine.EngineAccess;
+import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.Selection;
 import org.w3c.dom.Node;
 
-import java.util.Optional;
-
-public class BaseSelection<C extends DocContainer<D>, P, D> implements Selection<C, P, D> {
+public class SelectionImpl<C extends DocContainer<D>, P, D> extends SelectedNodeImpl<C, P, D> implements Selection<C, P, D> {
 
     private final C doc;
-    private final Node node;
-    private final P placeholderData;
-    private final TextualPlaceholderToolkit<P> toolkit;
 
-    public BaseSelection(C doc, Node node, P placeholderData, TextualPlaceholderToolkit<P> optionalToolkit) {
+    private final EngineAccess engineAccess;
+
+    public SelectionImpl(C doc, Node node, PlaceholdersProvider<C, P, D> provider, EngineAccess engineAccess) {
+        super(node, provider);
         this.doc = doc;
-        this.node = node;
-        this.placeholderData = placeholderData;
-        this.toolkit = optionalToolkit;
-    }
-
-    @Override
-    public Node getNode() {
-        return node;
+        this.engineAccess = engineAccess;
     }
 
     @Override
@@ -56,12 +48,12 @@ public class BaseSelection<C extends DocContainer<D>, P, D> implements Selection
     }
 
     @Override
-    public P getPlaceholderData() {
-        return placeholderData;
+    public EngineAccess getEngineAccess() {
+        return engineAccess;
     }
 
     @Override
-    public Optional<TextualPlaceholderToolkit<P>> getPlaceholderToolkit() {
-        return Optional.ofNullable(toolkit);
+    public String toString() {
+        return String.valueOf(getNode());
     }
 }

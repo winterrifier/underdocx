@@ -22,31 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.commands;
+package de.underdocx.enginelayers.baseengine.internal;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.enginelayers.baseengine.CommandHandler;
-import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.stringmodifier.ReplaceWithTextModifier;
+import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
+import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
+import de.underdocx.enginelayers.baseengine.SelectedNode;
+import org.w3c.dom.Node;
 
 import java.util.Optional;
-import java.util.function.Function;
 
-import static de.underdocx.tools.common.Convenience.build;
+public class SelectedNodeImpl<C extends DocContainer<D>, P, D> implements SelectedNode<P> {
 
-public class SimpleReplaceFunctionCommand<C extends DocContainer<D>, D> implements CommandHandler<C, String, D> {
+    protected final Node node;
+    protected final PlaceholdersProvider<C, P, D> provider;
 
-    private final Function<String, Optional<String>> replaceFunction;
-
-    public SimpleReplaceFunctionCommand(Function<String, Optional<String>> replaceFunction) {
-        this.replaceFunction = replaceFunction;
+    public SelectedNodeImpl(Node node, PlaceholdersProvider<C, P, D> placeholdersProvider) {
+        this.node = node;
+        this.provider = placeholdersProvider;
     }
 
     @Override
-    public CommandHandlerResult tryExecuteCommand(Selection<C, String, D> selection) {
-        return build(CommandHandlerResult.IGNORED, result ->
-                replaceFunction.apply(selection.getPlaceholderData()).ifPresent(replacement ->
-                        result.value = CommandHandlerResult.mapToExecuted(new ReplaceWithTextModifier().modify(selection, replacement))
-                ));
+    public Node getNode() {
+        return node;
+    }
+
+    @Override
+    public P getPlaceholderData() {
+        return provider.getPlaceholderData(node);
+    }
+
+    @Override
+    public Optional<TextualPlaceholderToolkit<P>> getPlaceholderToolkit() {
+        return provider.getPlaceholderToolkit();
     }
 }

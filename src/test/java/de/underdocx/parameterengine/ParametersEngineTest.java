@@ -25,10 +25,10 @@ SOFTWARE.
 package de.underdocx.parameterengine;
 
 import de.underdocx.AbstractOdtTest;
-import de.underdocx.DefaultODTEngine;
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.stringmodifier.ReplaceWithTextModifier;
+import de.underdocx.enginelayers.baseengine.modifiers.stringmodifier.ReplaceWithTextModifier;
+import de.underdocx.enginelayers.defaultodtengine.DefaultODTEngine;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import org.junit.jupiter.api.Test;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;

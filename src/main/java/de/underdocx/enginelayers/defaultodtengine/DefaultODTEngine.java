@@ -22,17 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx;
+package de.underdocx.enginelayers.defaultodtengine;
 
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
-import de.underdocx.enginelayers.baseengine.internal.commands.SimpleDollarImageReplaceCommand;
-import de.underdocx.enginelayers.baseengine.internal.commands.SimpleReplaceFunctionCommand;
+import de.underdocx.enginelayers.baseengine.commands.SimpleDollarImageReplaceCommand;
+import de.underdocx.enginelayers.baseengine.commands.SimpleReplaceFunctionCommand;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholdersProvider;
+import de.underdocx.enginelayers.defaultodtengine.commands.ModelCommandHandler;
+import de.underdocx.enginelayers.defaultodtengine.commands.StringCommandHandler;
 import de.underdocx.enginelayers.modelengine.MCommandHandler;
 import de.underdocx.enginelayers.modelengine.ModelEngine;
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderProvider;
 import de.underdocx.enginelayers.parameterengine.commands.CurrentDateCommand;
@@ -54,8 +57,11 @@ public class DefaultODTEngine implements Runnable {
 
     private final ModelEngine<OdtContainer, OdfTextDocument> engine;
 
+
     protected void registerDefaultCommandHandlers() {
         engine.registerCommandHandler(parameters, new CurrentDateCommand<>());
+        engine.registerCommandHandler(parameters, new ModelCommandHandler());
+        engine.registerCommandHandler(parameters, new StringCommandHandler());
     }
 
     public DefaultODTEngine(OdtContainer doc) {
@@ -106,6 +112,10 @@ public class DefaultODTEngine implements Runnable {
                     }
                 }, keepWidth
         );
+    }
+
+    public void setModel(ModelNode tree) {
+        engine.setModel(tree);
     }
 
 

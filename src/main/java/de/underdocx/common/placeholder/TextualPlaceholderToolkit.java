@@ -26,13 +26,15 @@ package de.underdocx.common.placeholder;
 
 import de.underdocx.common.codec.Codec;
 import de.underdocx.environment.UnderdocxExecutionException;
-import de.underdocx.tools.common.Convenience;
-import de.underdocx.tools.common.Regex;
 import de.underdocx.tools.tree.Nodes;
 import org.w3c.dom.Node;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+
+import static de.underdocx.tools.common.Convenience.filter;
+import static de.underdocx.tools.common.Convenience.first;
 
 public class TextualPlaceholderToolkit<P> {
     private final EncapsulatedNodesExtractor extractor;
@@ -79,12 +81,12 @@ public class TextualPlaceholderToolkit<P> {
         return Nodes.cloneNode(placeholder, placeholder, insertBefore, true);
     }
 
-    public List<Node> findPlaceholders(Node tree, Regex search) {
-        return Convenience.filter(extractPlaceholders(tree), node -> search == null || search.matches(getText(node)));
+    public List<Node> findPlaceholders(Node tree, Predicate<P> filter) {
+        return filter(extractPlaceholders(tree), node -> filter.test(parsePlaceholder(node)));
     }
 
-    public Optional<Node> findFirstPlaceholder(Node tree, Regex search) {
-        List<Node> list = findPlaceholders(tree, search);
-        return list.isEmpty() ? Optional.empty() : Optional.of(Convenience.first(list));
+    public Optional<Node> findFirstPlaceholder(Node tree, Predicate<P> filter) {
+        List<Node> list = findPlaceholders(tree, filter);
+        return list.isEmpty() ? Optional.empty() : Optional.of(first(list));
     }
 }

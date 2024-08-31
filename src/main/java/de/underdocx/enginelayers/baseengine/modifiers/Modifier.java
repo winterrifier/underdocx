@@ -22,15 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.baseengine.modifiers;
 
 import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.Selection;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+public interface Modifier<C extends DocContainer<D>, P, D, M> {
 
-    C getDocContainer();
-
-    EngineAccess getEngineAccess();
-
-
+    boolean modify(Selection<C, P, D> selection, M modifierData);
 }

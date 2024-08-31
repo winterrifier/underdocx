@@ -24,13 +24,16 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.baseengine;
 
-import de.underdocx.common.doc.DocContainer;
+import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
+import org.w3c.dom.Node;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+import java.util.Optional;
 
-    C getDocContainer();
+public interface SelectedNode<P> {
 
-    EngineAccess getEngineAccess();
+    Node getNode();
 
+    P getPlaceholderData();
 
+    Optional<TextualPlaceholderToolkit<P>> getPlaceholderToolkit();
 }

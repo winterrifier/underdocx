@@ -26,7 +26,7 @@ package de.underdocx.enginelayers.modelengine;
 
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.Modifier;
+import de.underdocx.enginelayers.baseengine.modifiers.Modifier;
 import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
 
 public interface MModifier<C extends DocContainer<D>, P, D, M> extends Modifier<C, P, D, M> {

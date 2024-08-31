@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.tools.tree;
+package de.underdocx.tools.tree.enumerator;
 
 import de.underdocx.tools.common.Convenience;
 
@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface Enumerator<T> extends Iterable<T>, Iterator<T>, Enumeration<T> {
+
 
     boolean hasNext();
 
@@ -106,5 +107,9 @@ public interface Enumerator<T> extends Iterable<T>, Iterator<T>, Enumeration<T> 
     @Override
     default Iterator<T> iterator() {
         return this;
+    }
+
+    default LookAheadEnumerator<T> toLookAheadEnumerator() {
+        return new SimpleLookAheadEnumerator<>(this);
     }
 }

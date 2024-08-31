@@ -22,33 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage;
+package de.underdocx.tools.common;
 
-import java.net.URL;
+public class Tripple<L, M, R> {
 
-public interface ExistingImageModifierData {
+    public L left;
+    public M middle;
+    public R right;
 
-    URL getImageURL();
-
-    boolean isKeepWidth();
-
-    class Simple implements ExistingImageModifierData {
-        boolean keepWidth;
-        URL imageURL;
-
-        public Simple(boolean keepWidth, URL imageURL) {
-            this.keepWidth = keepWidth;
-            this.imageURL = imageURL;
-        }
-
-        @Override
-        public URL getImageURL() {
-            return imageURL;
-        }
-
-        @Override
-        public boolean isKeepWidth() {
-            return keepWidth;
-        }
+    public Tripple(L left, M middle, R right) {
+        this.left = left;
+        this.middle = middle;
+        this.right = right;
     }
+
+    public Tripple() {
+    }
+
+    public String toString() {
+        return "(" + left + ", " + middle + ", " + right + ")";
+    }
+
 }

@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.underdocx.tools.tree;
 
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import jakarta.validation.constraints.NotNull;
 import org.w3c.dom.Node;
 

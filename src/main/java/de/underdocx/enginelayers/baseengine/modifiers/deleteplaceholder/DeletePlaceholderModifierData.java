@@ -22,15 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder;
 
-import de.underdocx.common.doc.DocContainer;
+public interface DeletePlaceholderModifierData {
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+    static DeletePlaceholderModifierData DEFAULT = new Simple(Strategy.DELETE_BLANK_PARAGRAPH, true);
 
-    C getDocContainer();
+    enum Strategy {
+        KEEP_PARAGRAPH,
+        DELETE_EMPTY_PARAGRAPH,
+        DELETE_BLANK_PARAGRAPH,
+        DELETE_PARAGRAPH
+    }
 
-    EngineAccess getEngineAccess();
+    Strategy getDeleteStrategy();
 
+    boolean copyPageStyle();
+
+    class Simple implements DeletePlaceholderModifierData {
+
+        public Simple(Strategy strategy, boolean copyPageStyle) {
+            this.strategy = strategy;
+            this.copyPageStyle = copyPageStyle;
+        }
+
+        private Strategy strategy;
+        private boolean copyPageStyle;
+
+        @Override
+        public Strategy getDeleteStrategy() {
+            return strategy;
+        }
+
+        @Override
+        public boolean copyPageStyle() {
+            return copyPageStyle;
+        }
+    }
 
 }

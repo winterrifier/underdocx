@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.modifiers;
+package de.underdocx.enginelayers.baseengine.modifiers;
 
 import de.underdocx.common.doc.DocContainer;
-import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.baseengine.EngineAccess;
 
-public interface Modifier<C extends DocContainer<D>, P, D, M> {
+public interface EngineListener<C extends DocContainer<D>, D> {
 
-    boolean modify(Selection<C, P, D> selection, M modifierData);
+    void eodReached(C doc, EngineAccess<C, D> engineAccess);
 }

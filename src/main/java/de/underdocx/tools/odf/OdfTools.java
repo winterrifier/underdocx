@@ -24,13 +24,24 @@ SOFTWARE.
 
 package de.underdocx.tools.odf;
 
+import de.underdocx.tools.tree.Nodes;
+import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
 import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.w3c.dom.Node;
+
+import java.util.Optional;
 
 public class OdfTools {
 
     public static OdfFileDom getFileDom(Node odfNode) {
         return ((OdfFileDom) odfNode.getOwnerDocument());
+    }
+
+    public static Optional<Node> findAscendantParagraph(Node node) {
+        Optional<Node> paragraph = Nodes.findAscendantNode(node,
+                currentNode -> currentNode.getParentNode() != null
+                        && currentNode.getParentNode() instanceof TextParagraphElementBase);
+        return paragraph;
     }
 
 

@@ -26,6 +26,7 @@ package de.underdocx.enginelayers.modelengine;
 
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.BaseEngine;
+import de.underdocx.enginelayers.baseengine.EngineAccess;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
@@ -34,10 +35,15 @@ import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
 import de.underdocx.enginelayers.modelengine.modelaccess.internal.DefaultModelAccess;
 import org.w3c.dom.Node;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
 
     protected ModelNode model = new MapModelNode();
     protected ModelNode currentModelNode = model;
+    protected Deque<Scope> scopeStack = new ArrayDeque<>();
+
 
     public ModelEngine(DocContainer doc) {
         super(doc);
@@ -48,11 +54,10 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
         currentModelNode = model;
     }
 
-
     @Override
-    protected Selection createSelection(PlaceholdersProvider provider, Node node) {
-        Selection baseSelection = super.createSelection(provider, node);
-        return new MSelectionWrapper(baseSelection, new ModelEngineModelAccess());
+    protected Selection createSelection(PlaceholdersProvider provider, Node node, EngineAccess engineAccess) {
+        Selection baseSelection = super.createSelection(provider, node, engineAccess);
+        return new MSelectionWrapper(baseSelection, new ModelEngineModelAccess(), scopeStack);
     }
 
     private class ModelEngineModelAccess extends DefaultModelAccess {

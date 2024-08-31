@@ -22,15 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.baseengine.modifiers.stringmodifier;
 
 import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.Selection;
+import de.underdocx.enginelayers.baseengine.modifiers.Modifier;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+import static de.underdocx.tools.common.Convenience.build;
 
-    C getDocContainer();
+public class ReplaceWithTextModifier<C extends DocContainer<D>, P, D> implements Modifier<C, P, D, String> {
 
-    EngineAccess getEngineAccess();
-
-
+    @Override
+    public boolean modify(Selection<C, P, D> selection, String modifierData) {
+        return build(false, result ->
+                selection.getPlaceholderToolkit().ifPresent(
+                        toolkit -> {
+                            toolkit.replacePlaceholderWithText(selection.getNode(), modifierData);
+                            result.value = true;
+                        }));
+    }
 }

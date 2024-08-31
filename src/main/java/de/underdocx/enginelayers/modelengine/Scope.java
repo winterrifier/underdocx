@@ -22,15 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.modelengine;
 
-import de.underdocx.common.doc.DocContainer;
-
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
-
-    C getDocContainer();
-
-    EngineAccess getEngineAccess();
+public interface Scope {
 
 
 }

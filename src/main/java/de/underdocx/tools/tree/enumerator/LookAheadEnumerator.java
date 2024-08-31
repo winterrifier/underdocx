@@ -22,15 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.tools.tree.enumerator;
 
-import de.underdocx.common.doc.DocContainer;
+import java.util.List;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+public interface LookAheadEnumerator<T> extends Enumerator<T> {
 
-    C getDocContainer();
+    List<T> lookAhead();
 
-    EngineAccess getEngineAccess();
-
-
+    List<T> lookAhead(int count);
 }

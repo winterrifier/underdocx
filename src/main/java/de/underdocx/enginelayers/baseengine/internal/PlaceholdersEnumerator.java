@@ -22,19 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.baseengine.internal;
 
 import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.tools.common.Pair;
-import de.underdocx.tools.tree.Enumerator;
 import de.underdocx.tools.tree.Nodes;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import org.w3c.dom.Node;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static de.underdocx.tools.common.Convenience.also;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class PlaceholdersEnumerator<C extends DocContainer<D>, D> implements Enumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> {
 

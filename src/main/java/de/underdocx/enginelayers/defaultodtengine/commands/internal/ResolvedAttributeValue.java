@@ -22,15 +22,51 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine;
+package de.underdocx.enginelayers.defaultodtengine.commands.internal;
 
-import de.underdocx.common.doc.DocContainer;
+import java.util.Optional;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+public class ResolvedAttributeValue<T> {
 
-    C getDocContainer();
 
-    EngineAccess getEngineAccess();
+    public enum ResolveType {
+        UNRESOLVED_NO_ATTRIBUTE,
+        UNRESOLVED_NO_MODEL,
+        UNRESOLVED_INCOMPATIBLE,
+        RESOLVED_ATTRIBUTE_VALUE,
+        RESOLVED_MODEL_VALUE
+    }
 
+    private T value = null;
+    private ResolveType resolveType;
+
+    public ResolvedAttributeValue() {
+        this.resolveType = ResolveType.UNRESOLVED_NO_ATTRIBUTE;
+    }
+
+    public ResolvedAttributeValue(ResolveType type, T value) {
+        this.resolveType = type;
+        this.value = value;
+    }
+
+    public ResolveType getResolveType() {
+        return resolveType;
+    }
+
+    public void setResolveType(ResolveType resolveType) {
+        this.resolveType = resolveType;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public Optional<T> getOptionalValue() {
+        return Optional.ofNullable(value);
+    }
 
 }

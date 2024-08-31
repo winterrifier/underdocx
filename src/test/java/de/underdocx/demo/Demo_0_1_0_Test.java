@@ -25,8 +25,8 @@ SOFTWARE.
 package de.underdocx.demo;
 
 import de.underdocx.AbstractOdtTest;
-import de.underdocx.DefaultODTEngine;
 import de.underdocx.common.doc.odf.OdtContainer;
+import de.underdocx.enginelayers.defaultodtengine.DefaultODTEngine;
 import de.underdocx.environment.UnderdocxEnv;
 import org.junit.jupiter.api.Test;
 

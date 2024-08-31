@@ -25,12 +25,12 @@ SOFTWARE.
 package de.underdocx.baseengine;
 
 import de.underdocx.AbstractOdtTest;
-import de.underdocx.DefaultODTEngine;
 import de.underdocx.common.doc.odf.OdtContainer;
 import de.underdocx.common.placeholder.EncapsulatedNodesExtractor;
 import de.underdocx.enginelayers.baseengine.BaseEngine;
-import de.underdocx.enginelayers.baseengine.internal.commands.SimpleReplaceFunctionCommand;
+import de.underdocx.enginelayers.baseengine.commands.SimpleReplaceFunctionCommand;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.SimpleDollarPlaceholdersProvider;
+import de.underdocx.enginelayers.defaultodtengine.DefaultODTEngine;
 import de.underdocx.tools.tree.Nodes;
 import de.underdocx.tools.tree.TreePrinter;
 import org.junit.jupiter.api.Test;

@@ -27,7 +27,7 @@ package de.underdocx.enginelayers.parameterengine.commands;
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.stringmodifier.ReplaceWithTextModifier;
+import de.underdocx.enginelayers.baseengine.modifiers.stringmodifier.ReplaceWithTextModifier;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import de.underdocx.tools.common.Convenience;
 

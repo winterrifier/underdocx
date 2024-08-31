@@ -25,7 +25,7 @@ SOFTWARE.
 package de.underdocx.tools.odf;
 
 import de.underdocx.common.doc.odf.OdfContainer;
-import de.underdocx.tools.tree.Enumerator;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
 import org.w3c.dom.Node;
 

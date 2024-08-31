@@ -22,23 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.modifiers.stringmodifier;
+package de.underdocx.enginelayers.baseengine.modifiers.existingimage;
 
-import de.underdocx.common.doc.DocContainer;
-import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.Modifier;
+import java.net.URL;
 
-import static de.underdocx.tools.common.Convenience.build;
+public interface ExistingImageModifierData {
 
-public class ReplaceWithTextModifier<C extends DocContainer<D>, P, D> implements Modifier<C, P, D, String> {
+    URL getImageURL();
 
-    @Override
-    public boolean modify(Selection<C, P, D> selection, String modifierData) {
-        return build(false, result ->
-                selection.getPlaceholderToolkit().ifPresent(
-                        toolkit -> {
-                            toolkit.replacePlaceholderWithText(selection.getNode(), modifierData);
-                            result.value = true;
-                        }));
+    boolean isKeepWidth();
+
+    class Simple implements ExistingImageModifierData {
+        boolean keepWidth;
+        URL imageURL;
+
+        public Simple(boolean keepWidth, URL imageURL) {
+            this.keepWidth = keepWidth;
+            this.imageURL = imageURL;
+        }
+
+        @Override
+        public URL getImageURL() {
+            return imageURL;
+        }
+
+        @Override
+        public boolean isKeepWidth() {
+            return keepWidth;
+        }
     }
 }

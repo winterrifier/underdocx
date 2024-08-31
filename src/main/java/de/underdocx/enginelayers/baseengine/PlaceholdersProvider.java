@@ -26,7 +26,7 @@ package de.underdocx.enginelayers.baseengine;
 
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
-import de.underdocx.tools.tree.Enumerator;
+import de.underdocx.tools.tree.enumerator.Enumerator;
 import org.w3c.dom.Node;
 
 import java.util.Optional;

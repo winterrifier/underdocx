@@ -45,7 +45,34 @@ public interface ParametersPlaceholderData {
 
     void addStringAttribute(String property, String value);
 
-    Optional<String> getStringAttribute(String property);
+    default boolean hasAttribute(String property) {
+        return getJson() != null && getJson().has(property);
+    }
+
+    default boolean hasNotNullAttribute(String property) {
+        return getJson() != null && getJson().hasNonNull(property);
+    }
+
+    default Optional<String> getStringAttribute(String property) {
+        return buildOptional(w -> ifNotNull(getJson(),
+                json -> ifIs(json.get(property), jp -> jp != null && jp.isTextual(), jp -> w.value = jp.asText())));
+    }
+
+    default Optional<Integer> getIntegerAttribute(String property) {
+        return buildOptional(w -> ifNotNull(getJson(),
+                json -> ifIs(json.get(property), jp -> jp != null && jp.isInt(), jp -> w.value = jp.asInt())));
+    }
+
+    default Optional<Double> getDoubleAttribute(String property) {
+        return buildOptional(w -> ifNotNull(getJson(),
+                json -> ifIs(json.get(property), jp -> jp != null && jp.isDouble(), jp -> w.value = jp.asDouble())));
+    }
+
+    default Optional<Boolean> getBooleanAttribute(String property) {
+        return buildOptional(w -> ifNotNull(getJson(),
+                json -> ifIs(json.get(property), jp -> jp != null && jp.isBoolean(), jp -> w.value = jp.asBoolean())));
+    }
+
 
     class Simple implements ParametersPlaceholderData {
         private String key;
@@ -75,12 +102,6 @@ public interface ParametersPlaceholderData {
             ((ObjectNode) json).put(property, value);
         }
 
-        @Override
-        public Optional<String> getStringAttribute(String property) {
-            return buildOptional(w -> ifNotNull(getJson(), json -> {
-                ifIs(json.get(property), jp -> jp != null && jp.isTextual(), jp -> w.value = jp.asText());
-            }));
-        }
 
         @Override
         public String getKey() {
@@ -90,6 +111,14 @@ public interface ParametersPlaceholderData {
         @Override
         public void setKey(String key) {
             this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return "Simple{" +
+                    "key='" + key + '\'' +
+                    ", json=" + json +
+                    '}';
         }
     }
 }

@@ -22,18 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine;
+package de.underdocx.enginelayers.baseengine.commands;
 
 import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
+import de.underdocx.enginelayers.baseengine.modifiers.stringmodifier.ReplaceWithTextModifier;
 
-import java.util.Deque;
 import java.util.Optional;
+import java.util.function.Function;
 
-public interface MSelection<C extends DocContainer<D>, P, D> extends Selection<C, P, D> {
+import static de.underdocx.tools.common.Convenience.build;
 
-    Optional<ModelAccess> getModelAccess();
+public class SimpleReplaceFunctionCommand<C extends DocContainer<D>, D> implements CommandHandler<C, String, D> {
 
-    Optional<Deque<Scope>> getScopeStack();
+    private final Function<String, Optional<String>> replaceFunction;
+
+    public SimpleReplaceFunctionCommand(Function<String, Optional<String>> replaceFunction) {
+        this.replaceFunction = replaceFunction;
+    }
+
+    @Override
+    public CommandHandlerResult tryExecuteCommand(Selection<C, String, D> selection) {
+        return build(CommandHandlerResult.IGNORED, result ->
+                replaceFunction.apply(selection.getPlaceholderData()).ifPresent(replacement ->
+                        result.value = CommandHandlerResult.mapToExecuted(new ReplaceWithTextModifier().modify(selection, replacement))
+                ));
+    }
 }

@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.baseengine.internal.commands;
+package de.underdocx.enginelayers.baseengine.commands;
 
 import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.CommandHandler;
 import de.underdocx.enginelayers.baseengine.Selection;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage.ExistingImageModifier;
-import de.underdocx.enginelayers.baseengine.internal.modifiers.existingimage.ExistingImageModifierData;
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholderData;
+import de.underdocx.enginelayers.baseengine.modifiers.existingimage.ExistingImageModifier;
+import de.underdocx.enginelayers.baseengine.modifiers.existingimage.ExistingImageModifierData;
 
 import java.net.URL;
 import java.util.Optional;

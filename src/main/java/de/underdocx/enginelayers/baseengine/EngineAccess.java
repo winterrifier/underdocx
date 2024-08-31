@@ -25,12 +25,21 @@ SOFTWARE.
 package de.underdocx.enginelayers.baseengine;
 
 import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.baseengine.modifiers.EngineListener;
+import org.w3c.dom.Node;
 
-public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode<P> {
+import java.util.List;
+import java.util.function.Predicate;
 
-    C getDocContainer();
+public interface EngineAccess<C extends DocContainer<D>, D> {
 
-    EngineAccess getEngineAccess();
+    void addListener(EngineListener<C, D> listener);
 
+    void removeListener(EngineListener<C, D> listener);
 
+    void forceRescan();
+
+    List<SelectedNode<?>> lookAhead(Predicate<SelectedNode<?>> filter);
+
+    List<Node> lookBack(Predicate<Node> filter);
 }
