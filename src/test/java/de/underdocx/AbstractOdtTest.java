@@ -141,6 +141,7 @@ public class AbstractOdtTest extends AbstractTest {
         try {
             doc.save(tmp);
             Desktop.getDesktop().open(tmp);
+            UnderdocxEnv.getInstance().logger.trace("tmp file saved: " + tmp);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

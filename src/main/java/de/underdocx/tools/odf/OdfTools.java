@@ -38,10 +38,7 @@ public class OdfTools {
     }
 
     public static Optional<Node> findAscendantParagraph(Node node) {
-        Optional<Node> paragraph = Nodes.findAscendantNode(node,
-                currentNode -> currentNode.getParentNode() != null
-                        && currentNode.getParentNode() instanceof TextParagraphElementBase);
-        return paragraph;
+        return Nodes.findAscendantNode(node, currentNode -> currentNode instanceof TextParagraphElementBase);
     }
 
 

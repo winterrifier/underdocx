@@ -29,8 +29,7 @@ import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
 import java.util.*;
 
-import static de.underdocx.tools.common.Convenience.also;
-import static de.underdocx.tools.common.Convenience.build;
+import static de.underdocx.tools.common.Convenience.*;
 
 public abstract class AbstractPredefinedModelNode<T> extends AbstractModelNode<T> implements ModelNode {
 
@@ -69,7 +68,7 @@ public abstract class AbstractPredefinedModelNode<T> extends AbstractModelNode<T
 
     @Override
     public boolean isNull() {
-        return getValue() != null;
+        return getValue() == null;
     }
 
     @Override

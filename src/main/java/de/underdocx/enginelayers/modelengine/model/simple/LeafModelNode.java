@@ -38,4 +38,6 @@ public class LeafModelNode<T> extends AbstractPredefinedModelNode<T> {
     public ModelNodeType getType() {
         return ModelNodeType.LEAF;
     }
+
+
 }
