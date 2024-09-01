@@ -36,6 +36,7 @@ import de.underdocx.enginelayers.defaultodtengine.commands.StringCommandHandler;
 import de.underdocx.enginelayers.modelengine.MCommandHandler;
 import de.underdocx.enginelayers.modelengine.ModelEngine;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.enginelayers.modelengine.model.simple.ReflectionModelNode;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderProvider;
 import de.underdocx.enginelayers.parameterengine.commands.CurrentDateCommand;
@@ -116,6 +117,14 @@ public class DefaultODTEngine implements Runnable {
 
     public void setModel(ModelNode tree) {
         engine.setModel(tree);
+    }
+
+    public void setModel(Object object) {
+        engine.setModel(new ReflectionModelNode(object));
+    }
+
+    public void setModel(Object object, ReflectionModelNode.Resolver resolver) {
+        engine.setModel(new ReflectionModelNode(object, resolver));
     }
 
 

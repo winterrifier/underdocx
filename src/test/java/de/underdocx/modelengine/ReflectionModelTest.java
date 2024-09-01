@@ -24,17 +24,21 @@ SOFTWARE.
 
 package de.underdocx.modelengine;
 
-import de.underdocx.AbstractTest;
+import de.underdocx.AbstractOdtTest;
+import de.underdocx.common.doc.odf.OdtContainer;
+import de.underdocx.enginelayers.defaultodtengine.DefaultODTEngine;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.enginelayers.modelengine.model.simple.LeafModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.ReflectionModelNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ReflectionModelTest extends AbstractTest {
+public class ReflectionModelTest extends AbstractOdtTest {
 
     @Test
     public void testReflectionModel() {
@@ -62,5 +66,36 @@ public class ReflectionModelTest extends AbstractTest {
             return null;
         }
 
+    }
+
+    @Test
+    public void testReflectionModelEngine() {
+        OdtContainer doc = new OdtContainer("${String @value:\"b.c[0]\"}");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.setModel(new TestClassA());
+        show(doc);
+        engine.run();
+        show(doc);
+        assertContains(doc, "Item1");
+        assertNoPlaceholders(doc);
+    }
+
+    @Test
+    public void testResolve() {
+        OdtContainer doc = new OdtContainer("" +
+                "${String @value:\"b.x\"}      \n" +
+                "${String @value:\"b.c[0]\"}   \n" +
+                "${String @value:\"b.c[0]\"}   \n");
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.setModel(new TestClassA(),
+                (object, name) -> name.equals("x")
+                        ? java.util.Optional.of(new LeafModelNode("42"))
+                        : Optional.empty());
+        show(doc);
+        engine.run();
+        show(doc);
+        assertContains(doc, "Item1");
+        assertContains(doc, "42");
+        assertNoPlaceholders(doc);
     }
 }

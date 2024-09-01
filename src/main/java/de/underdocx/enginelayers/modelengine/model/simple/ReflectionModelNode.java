@@ -37,15 +37,22 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
 
     private final Object containedValue;
     protected ModelNode parent;
+    protected Resolver resolver = null;
 
     public ReflectionModelNode(Object object) {
         this.containedValue = object;
         this.parent = null;
     }
 
+    public ReflectionModelNode(Object object, Resolver resolver) {
+        this.containedValue = object;
+        this.parent = null;
+        this.resolver = resolver;
+    }
+
     @Override
     protected ReflectionModelNode create(Object object) {
-        return also(new ReflectionModelNode(object), result -> result.parent = this);
+        return also(new ReflectionModelNode(object, resolver), result -> result.parent = this);
     }
 
     @Override
@@ -84,6 +91,13 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
 
     @Override
     public ModelNode getProperty(String name) {
+        if (resolver != null) {
+            Optional<AbstractModelNode> resolved = resolver.resolve(containedValue, name);
+            if (resolved.isPresent()) {
+                resolved.get().setParent(this);
+                return resolved.get();
+            }
+        }
         if (getType() != ModelNodeType.MAP) {
             return null;
         } else if (getValue() instanceof Map<?, ?>) {
@@ -130,6 +144,7 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
 
     @Override
     public boolean hasProperty(String name) {
+        if (resolver != null && resolver.resolve(containedValue, name).isPresent()) return true;
         if (getType() != ModelNodeType.MAP) {
             return false;
         } else if (getValue() instanceof Map<?, ?>) {
@@ -196,8 +211,12 @@ public class ReflectionModelNode extends AbstractModelNode<Object> implements Mo
                         field.getName().equalsIgnoreCase(("is" + name)));
     }
 
-    public String toString() {
-        return "ReflectionModelNode for: " + containedValue;
+    public interface Resolver {
+        Optional<AbstractModelNode> resolve(Object reflectionObject, String requestedProperty);
     }
 
+    @Override
+    public String toString() {
+        return "ReflectionModelNode: " + containedValue.getClass().getSimpleName() + " : " + containedValue;
+    }
 }

@@ -31,7 +31,7 @@ public abstract class AbstractModelNode<T> implements ModelNode {
     protected T containedValue;
     protected AbstractModelNode<?> parent;
 
-    protected void setParent(AbstractPredefinedModelNode<?> node) {
+    protected void setParent(AbstractModelNode<?> node) {
         if (node != null && this.parent != null && this.parent != node) {
             this.parent.removeChild(node);
         }
