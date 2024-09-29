@@ -73,7 +73,7 @@ public class EngineAccessImpl<C extends DocContainer<D>, D> implements EngineAcc
     public List<SelectedNode<?>> lookAhead(Predicate<SelectedNode<?>> filter) {
         return buildList(result -> lookAhead.lookAhead().forEach(pair -> {
             SelectedNodeImpl<C, ?, D> selectedNode = new SelectedNodeImpl<>(pair.right, pair.left);
-            if (filter.test(selectedNode)) {
+            if (filter == null || filter.test(selectedNode)) {
                 result.add(selectedNode);
             }
         }));

@@ -32,6 +32,7 @@ import de.underdocx.enginelayers.baseengine.modifiers.EngineListener;
 import de.underdocx.environment.UnderdocxEnv;
 import de.underdocx.tools.common.Pair;
 import de.underdocx.tools.tree.enumerator.LookAheadEnumerator;
+import de.underdocx.tools.tree.enumerator.SimpleLookAheadEnumerator;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.w3c.dom.Node;
 
@@ -66,7 +67,7 @@ public class BaseEngine<C extends DocContainer<D>, D> implements Runnable {
     }
 
     protected LookAheadEnumerator<Pair<PlaceholdersProvider<C, ?, D>, Node>> createPlaceholdersEnumerator() {
-        return new PlaceholdersEnumerator<>(registry.keySet()).toLookAheadEnumerator();
+        return new SimpleLookAheadEnumerator<>(new PlaceholdersEnumerator<>(registry.keySet()));
     }
 
     protected CommandHandler.CommandHandlerResult findAndExecCommandHandler(PlaceholdersProvider<C, ?, D> provider, Selection<C, ?, D> selection) {

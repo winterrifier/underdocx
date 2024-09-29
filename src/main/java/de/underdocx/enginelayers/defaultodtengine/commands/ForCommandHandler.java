@@ -22,38 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.modelaccess.internal;
+package de.underdocx.enginelayers.defaultodtengine.commands;
 
-import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
+import de.underdocx.common.doc.DocContainer;
+import de.underdocx.enginelayers.defaultodtengine.commands.internal.AbstractTextualCommandHandler;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
-import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
+import de.underdocx.tools.common.Regex;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public class DefaultModelAccess implements ModelAccess {
+public class ForCommandHandler<C extends DocContainer<D>, D> extends AbstractTextualCommandHandler<C, D> {
 
-    private final Consumer<ModelNode> listener;
-    private final Supplier<ModelNode> modelProvider;
+    public static final Regex KEYS = new Regex("For|EndFor");
 
-
-    public DefaultModelAccess(Supplier<ModelNode> modelProvider, Consumer<ModelNode> modelSetListener) {
-        this.modelProvider = modelProvider;
-        this.listener = modelSetListener;
+    public ForCommandHandler() {
+        super(KEYS);
     }
 
     @Override
-    public ModelNode getCurrentModelNode() {
-        return modelProvider.get();
-    }
-
-    @Override
-    public Optional<ModelNode> interpret(String path, boolean setAsCurrent) {
-        Optional<ModelNode> result = ModelPath.interpret(path, getCurrentModelNode());
-        if (result.isPresent() && setAsCurrent) {
-            listener.accept(result.get());
-        }
-        return result;
+    protected CommandHandlerResult tryExecuteTextualCommand() {
+        Optional<ModelNode> modelValue = resolveModelValue();
+        // TODO
+        return CommandHandlerResult.IGNORED;
     }
 }

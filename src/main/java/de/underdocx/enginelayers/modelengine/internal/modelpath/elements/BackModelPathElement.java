@@ -26,6 +26,7 @@ package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BackModelPathElement implements ModelPathElement {
@@ -42,5 +43,12 @@ public class BackModelPathElement implements ModelPathElement {
     @Override
     public Optional<ModelNode> interpret(ModelNode node) {
         return Optional.ofNullable(node.getParent());
+    }
+
+    @Override
+    public void interpret(List<ModelPathElement> elementsWithoutThis) {
+        if (elementsWithoutThis.size() > 0) {
+            elementsWithoutThis.remove(elementsWithoutThis.size() - 1);
+        }
     }
 }

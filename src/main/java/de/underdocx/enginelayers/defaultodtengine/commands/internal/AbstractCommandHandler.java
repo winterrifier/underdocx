@@ -24,31 +24,27 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.defaultodtengine.commands.internal;
 
-import de.underdocx.common.doc.odf.OdtContainer;
+import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.EngineAccess;
 import de.underdocx.enginelayers.modelengine.MCommandHandler;
 import de.underdocx.enginelayers.modelengine.MSelection;
-import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
 import static de.underdocx.environment.UnderdocxExecutionException.expect;
 
-public abstract class AbstractCommandHandler<P> implements MCommandHandler<OdtContainer, P, OdfTextDocument> {
+public abstract class AbstractCommandHandler<C extends DocContainer<D>, P, D> implements MCommandHandler<C, P, D> {
 
-    protected MSelection<OdtContainer, P, OdfTextDocument> selection = null;
-    protected ModelNode model = null;
+    protected MSelection<C, P, D> selection = null;
     protected ModelAccess modelAccess = null;
-    protected EngineAccess engineAccess = null;
+    protected EngineAccess<C, D> engineAccess = null;
     protected P placeholderData = null;
 
 
     @Override
-    public CommandHandlerResult tryExecuteCommand(MSelection<OdtContainer, P, OdfTextDocument> selection) {
+    public CommandHandlerResult tryExecuteCommand(MSelection<C, P, D> selection) {
         this.selection = selection;
         this.modelAccess = expect(selection.getModelAccess());
         this.engineAccess = selection.getEngineAccess();
-        this.model = modelAccess.getCurrentModelNode();
         this.placeholderData = selection.getPlaceholderData();
         return tryExecuteCommand();
     }

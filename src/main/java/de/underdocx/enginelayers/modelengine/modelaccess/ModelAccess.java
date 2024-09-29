@@ -25,13 +25,27 @@ SOFTWARE.
 package de.underdocx.enginelayers.modelengine.modelaccess;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.tools.common.Pair;
 
 import java.util.Optional;
 
 public interface ModelAccess {
 
-    ModelNode getCurrentModelNode();
+    Optional<ModelNode> getCurrentModelNode();
 
-    Optional<ModelNode> interpret(String path, boolean setAsCurrent);
-    
+    ModelNode getRootModelNode();
+
+    String getCurrentModelPath();
+
+    Pair<String, Optional<ModelNode>> interpret(String suffix, boolean setAsCurrent);
+
+    void setCurrentPath(String modelPath);
+
+    void popVariable(String name);
+
+    Optional<ModelNode> getVariable(String name);
+
+    void pushVariable(String name, ModelNode value);
+
+
 }

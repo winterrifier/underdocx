@@ -48,6 +48,9 @@ public class ModelPath {
         this.elements.addAll(toClone.elements);
     }
 
+    public ModelPath() {
+    }
+
     public ModelPath(String toParse) {
         this.elements.addAll(codec.parse(toParse).orElseThrow(
                 () -> new UnderdocxExecutionException("can't parse modelpath: " + toParse)
@@ -74,6 +77,11 @@ public class ModelPath {
                 }
             });
         });
+    }
+
+    public void interpret(String path) {
+        List<ModelPathElement> subPath = new ModelPath(path).getElements();
+        subPath.forEach(subElement -> subElement.interpret(elements));
     }
 
 

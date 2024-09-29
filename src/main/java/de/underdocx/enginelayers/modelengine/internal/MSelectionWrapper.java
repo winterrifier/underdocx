@@ -29,37 +29,28 @@ import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.enginelayers.baseengine.EngineAccess;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.modelengine.MSelection;
-import de.underdocx.enginelayers.modelengine.Scope;
 import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
 import org.w3c.dom.Node;
 
-import java.util.Deque;
 import java.util.Optional;
 
 public class MSelectionWrapper<C extends DocContainer<D>, P, D> implements MSelection<C, P, D> {
 
     private final Selection<C, P, D> selection;
     private final ModelAccess access;
-    private final Deque<Scope> scopeStack;
 
-    public MSelectionWrapper(Selection<C, P, D> selection, ModelAccess access, Deque<Scope> scopeStack) {
+    public MSelectionWrapper(Selection<C, P, D> selection, ModelAccess access) {
         this.selection = selection;
         this.access = access;
-        this.scopeStack = scopeStack;
     }
 
     public MSelectionWrapper(Selection<C, P, D> selection) {
-        this(selection, null, null);
+        this(selection, null);
     }
 
     @Override
     public Optional<ModelAccess> getModelAccess() {
         return Optional.ofNullable(access);
-    }
-
-    @Override
-    public Optional<Deque<Scope>> getScopeStack() {
-        return Optional.ofNullable(scopeStack);
     }
 
     @Override
@@ -83,7 +74,7 @@ public class MSelectionWrapper<C extends DocContainer<D>, P, D> implements MSele
     }
 
     @Override
-    public EngineAccess getEngineAccess() {
+    public EngineAccess<C, D> getEngineAccess() {
         return selection.getEngineAccess();
     }
 

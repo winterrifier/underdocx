@@ -30,7 +30,7 @@ public interface Selection<C extends DocContainer<D>, P, D> extends SelectedNode
 
     C getDocContainer();
 
-    EngineAccess getEngineAccess();
+    EngineAccess<C, D> getEngineAccess();
 
 
 }

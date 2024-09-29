@@ -26,6 +26,7 @@ package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ModelPathElement {
@@ -33,5 +34,7 @@ public interface ModelPathElement {
     ModelPathElementType getType();
 
     Optional<ModelNode> interpret(ModelNode node);
+
+    void interpret(List<ModelPathElement> elementsWithoutThis);
 
 }

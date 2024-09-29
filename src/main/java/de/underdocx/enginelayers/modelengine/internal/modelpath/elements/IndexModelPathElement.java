@@ -26,9 +26,10 @@ package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
+import java.util.List;
 import java.util.Optional;
 
-import static de.underdocx.tools.common.Convenience.buildOptional;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class IndexModelPathElement implements ModelPathElement {
     private final int index;
@@ -53,5 +54,10 @@ public class IndexModelPathElement implements ModelPathElement {
     @Override
     public Optional<ModelNode> interpret(ModelNode node) {
         return buildOptional(w -> w.value = node.hasProperty(index) ? node.getProperty(index) : null);
+    }
+
+    @Override
+    public void interpret(List<ModelPathElement> elementsWithoutThis) {
+        elementsWithoutThis.add(this);
     }
 }

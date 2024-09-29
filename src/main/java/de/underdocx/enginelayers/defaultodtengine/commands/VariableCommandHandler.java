@@ -31,52 +31,50 @@ import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePl
 import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePlaceholderModifierData;
 import de.underdocx.enginelayers.defaultodtengine.commands.internal.AbstractTextualCommandHandler;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
+import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.common.Regex;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import static de.underdocx.tools.common.Convenience.*;
+public class VariableCommandHandler<C extends DocContainer<D>, D> extends AbstractTextualCommandHandler<C, D> implements EngineListener<C, D> {
 
-public class ModelCommandHandler<C extends DocContainer<D>, D> extends AbstractTextualCommandHandler<C, D>
-        implements EngineListener<C, D> {
+    public static final Regex KEYS = new Regex("Pop|Push");
 
-    public static final String MODEL = "Model";
-    public static final Regex KEYS = new Regex(Pattern.quote(MODEL));
+    public static final String KEY_ATTR = "key";
+    public static final String VALUE_ATTR = "value";
 
-    public ModelCommandHandler() {
+    public VariableCommandHandler() {
         super(KEYS);
     }
 
     @Override
     protected CommandHandlerResult tryExecuteTextualCommand() {
-        return build(CommandHandlerResult.IGNORED,
-                result -> {
-                    Optional<String> resolvedValue = resolveValue();
-                    if (resolvedValue.isPresent()) {
-                        modelAccess.setCurrentPath(resolvedValue.get());
-                        engineAccess.addListener(this);
-                        result.value = CommandHandlerResult.EXECUTED;
-                    } else {
-                        Optional<String> interpret = resolveStringAttribute("interpret").getOptionalValue();
-                        if (interpret.isPresent()) {
-                            modelAccess.interpret(interpret.get(), true);
-                            result.value = CommandHandlerResult.EXECUTED;
-                        }
-                    }
-
-                }
-        );
+        engineAccess.addListener(this);
+        return switch (placeholderData.getKey()) {
+            case "Pop" -> handlePopCommand();
+            case "Push" -> handlePushCommand();
+            default -> CommandHandlerResult.IGNORED;
+        };
     }
 
+    private CommandHandlerResult handlePushCommand() {
+        return Convenience.build(CommandHandlerResult.EXECUTED, result ->
+                resolveStringAttribute(KEY_ATTR).getOptionalValue().ifPresent(key ->
+                        resolveModelValue().ifPresent(modelValue ->
+                                modelAccess.pushVariable(key, modelValue))));
+    }
+
+    private CommandHandlerResult handlePopCommand() {
+        return Convenience.build(CommandHandlerResult.EXECUTED, result ->
+                resolveStringAttribute(KEY_ATTR).getOptionalValue().ifPresent(key ->
+                        modelAccess.popVariable(key)));
+    }
 
     @Override
     public void eodReached(C doc, EngineAccess<C, D> engineAccess) {
         engineAccess.lookBack(node -> {
             Optional<ParametersPlaceholderData> placeholderData = examineNode(node);
-            return placeholderData.isPresent() && (placeholderData.get()).getKey().equals(MODEL);
+            return placeholderData.isPresent() && KEYS.matches(placeholderData.get().getKey());
         }).forEach(placeholderNode -> DeletePlaceholderModifier.modify(placeholderNode, DeletePlaceholderModifierData.DEFAULT));
     }
-
-
 }

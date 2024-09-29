@@ -25,6 +25,7 @@ SOFTWARE.
 package de.underdocx.tools.odf;
 
 import de.underdocx.tools.tree.Nodes;
+import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
 import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.w3c.dom.Node;
@@ -37,8 +38,19 @@ public class OdfTools {
         return ((OdfFileDom) odfNode.getOwnerDocument());
     }
 
-    public static Optional<Node> findAscendantParagraph(Node node) {
-        return Nodes.findAscendantNode(node, currentNode -> currentNode instanceof TextParagraphElementBase);
+    public static Optional<Node> findAscendantParagraph(Node node, boolean ensureOfficeTextParent) {
+        return (!ensureOfficeTextParent)
+                ? Nodes.findAscendantNode(node, currentNode -> currentNode instanceof TextParagraphElementBase)
+                : Nodes.findAscendantNode(node, currentNode -> currentNode instanceof TextParagraphElementBase
+                && currentNode.getParentNode() instanceof OfficeTextElement);
+    }
+
+    public static Optional<Node> findOfficeText(Node node) {
+        return Nodes.findAscendantNode(node, currentNode -> currentNode instanceof OfficeTextElement);
+    }
+
+    public static Optional<Node> findOfficeTextDescendant(Node node) {
+        return Nodes.findAscendantNode(node, currentNode -> currentNode.getParentNode() instanceof OfficeTextElement);
     }
 
 

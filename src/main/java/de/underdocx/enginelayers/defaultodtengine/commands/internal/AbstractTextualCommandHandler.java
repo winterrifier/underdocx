@@ -24,42 +24,65 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.defaultodtengine.commands.internal;
 
+import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
+import de.underdocx.enginelayers.baseengine.SelectedNode;
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
 import de.underdocx.enginelayers.parameterengine.internal.ParametersPlaceholderCodec;
 import de.underdocx.environment.UnderdocxExecutionException;
 import de.underdocx.tools.common.Convenience;
+import de.underdocx.tools.common.Pair;
+import de.underdocx.tools.common.Regex;
 import org.w3c.dom.Node;
 
 import java.util.Optional;
 
-public abstract class AbstractTextualCommandHandler extends AbstractCommandHandler<ParametersPlaceholderData> {
+public abstract class AbstractTextualCommandHandler<C extends DocContainer<D>, D> extends AbstractCommandHandler<C, ParametersPlaceholderData, D> {
+
+    protected Regex allowedKeys = null;
     protected TextualPlaceholderToolkit<ParametersPlaceholderData> placeholderToolkit = null;
 
+    protected AbstractTextualCommandHandler() {
+    }
+
+    protected AbstractTextualCommandHandler(Regex keys) {
+        this.allowedKeys = keys;
+    }
+
+
     protected ResolvedAttributeValue<String> resolveStringAttribute(String name) {
-        return AttributeResolver.resolveStringAttribute(name, model, placeholderData);
+        return AttributeResolver.resolveStringAttribute(name, modelAccess, placeholderData);
     }
 
     protected ResolvedAttributeValue<Boolean> resolveBooleanAttribute(String name) {
-        return AttributeResolver.resolveBooleanAttribute(name, model, placeholderData);
+        return AttributeResolver.resolveBooleanAttribute(name, modelAccess, placeholderData);
     }
 
     protected ResolvedAttributeValue<Integer> resolveIntegerAttribute(String name) {
-        return AttributeResolver.resolveIntegerAttribute(name, model, placeholderData);
+        return AttributeResolver.resolveIntegerAttribute(name, modelAccess, placeholderData);
     }
 
     protected ResolvedAttributeValue<Double> resolveDoubleAttribute(String name) {
-        return AttributeResolver.resolveDoubleAttribute(name, model, placeholderData);
+        return AttributeResolver.resolveDoubleAttribute(name, modelAccess, placeholderData);
     }
 
     protected Optional<String> resolveValue() {
         return resolveStringAttribute("value").getOptionalValue();
     }
 
+    protected Optional<ModelNode> resolveModelValue() {
+        return AttributeResolver.resolveModelNode("value", modelAccess, placeholderData).getOptionalValue();
+    }
+
     @Override
     protected CommandHandlerResult tryExecuteCommand() {
         this.placeholderToolkit = UnderdocxExecutionException.expect(selection.getPlaceholderToolkit());
-        return tryExecuteTextualCommand();
+        if (allowedKeys == null || allowedKeys.matches(placeholderData.getKey())) {
+            return tryExecuteTextualCommand();
+        } else {
+            return CommandHandlerResult.IGNORED;
+        }
     }
 
     protected Optional<ParametersPlaceholderData> examineNode(Node node) {
@@ -74,4 +97,13 @@ public abstract class AbstractTextualCommandHandler extends AbstractCommandHandl
     }
 
     protected abstract CommandHandlerResult tryExecuteTextualCommand();
+
+    Optional<SelectedNode<ParametersPlaceholderData>> findEndNode(String endKey) {
+        Optional<Pair<SelectedNode<ParametersPlaceholderData>, SelectedNode<ParametersPlaceholderData>>> pair = AreaTools.findArea(selection.getEngineAccess().lookAhead(null), selection, endKey);
+        if (pair.isPresent()) {
+            return Optional.of(pair.get().right);
+        } else {
+            return Optional.of(null);
+        }
+    }
 }

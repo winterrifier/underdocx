@@ -30,19 +30,21 @@ import de.underdocx.enginelayers.baseengine.EngineAccess;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
+import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
-import de.underdocx.enginelayers.modelengine.modelaccess.internal.DefaultModelAccess;
+import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
+import de.underdocx.tools.common.Convenience;
+import de.underdocx.tools.common.Pair;
 import org.w3c.dom.Node;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
 
     protected ModelNode model = new MapModelNode();
-    protected ModelNode currentModelNode = model;
-    protected Deque<Scope> scopeStack = new ArrayDeque<>();
+    protected ModelPath currentModelPath = new ModelPath();
+    protected Map<String, Deque<ModelNode>> variableStacks = new HashMap<>();
 
 
     public ModelEngine(DocContainer doc) {
@@ -51,18 +53,69 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
 
     public void setModel(ModelNode model) {
         this.model = model;
-        currentModelNode = model;
+        this.currentModelPath = new ModelPath();
     }
 
     @Override
     protected Selection createSelection(PlaceholdersProvider provider, Node node, EngineAccess engineAccess) {
         Selection baseSelection = super.createSelection(provider, node, engineAccess);
-        return new MSelectionWrapper(baseSelection, new ModelEngineModelAccess(), scopeStack);
+        return new MSelectionWrapper(baseSelection, new ModelEngineModelAccess());
     }
 
-    private class ModelEngineModelAccess extends DefaultModelAccess {
-        public ModelEngineModelAccess() {
-            super(() -> currentModelNode, newModelNode -> currentModelNode = newModelNode);
+    private class ModelEngineModelAccess implements ModelAccess {
+
+        @Override
+        public Optional<ModelNode> getCurrentModelNode() {
+            return currentModelPath.interpret(model);
+        }
+
+        @Override
+        public ModelNode getRootModelNode() {
+            return model;
+        }
+
+        @Override
+        public String getCurrentModelPath() {
+            return currentModelPath.toString();
+        }
+
+        public void popVariable(String name) {
+            Deque<ModelNode> stack = variableStacks.get(name);
+            if (stack != null) {
+                stack.pop();
+            }
+        }
+
+        public Optional<ModelNode> getVariable(String name) {
+            return Convenience.buildOptional(result -> {
+                Deque<ModelNode> stack = variableStacks.get(name);
+                if (stack != null) {
+                    result.value = stack.peek();
+                }
+            });
+        }
+
+        public void pushVariable(String name, ModelNode value) {
+            Deque<ModelNode> stack = variableStacks.get(name);
+            if (stack == null) {
+                stack = new LinkedList<>();
+                variableStacks.put(name, stack);
+            }
+            stack.push(value);
+        }
+
+        @Override
+        public Pair<String, Optional<ModelNode>> interpret(String suffix, boolean setAsCurrent) {
+            ModelPath p = setAsCurrent ? currentModelPath : new ModelPath(currentModelPath);
+            p.interpret(suffix);
+            Optional<ModelNode> subNode = p.interpret(model);
+            return new Pair<>(p.toString(), subNode);
+        }
+
+
+        @Override
+        public void setCurrentPath(String modelPath) {
+            currentModelPath = new ModelPath(modelPath);
         }
     }
 

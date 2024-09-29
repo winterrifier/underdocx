@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder;
 
-import de.underdocx.common.doc.odf.OdtContainer;
+import de.underdocx.common.doc.DocContainer;
 import de.underdocx.common.placeholder.TextualPlaceholderToolkit;
 import de.underdocx.common.placeholder.basic.textnodeinterpreter.OdfTextNodeInterpreter;
 import de.underdocx.enginelayers.baseengine.Selection;
@@ -34,21 +34,20 @@ import de.underdocx.tools.common.Wrapper;
 import de.underdocx.tools.odf.OdfTools;
 import de.underdocx.tools.tree.nodepath.TextNodePath;
 import de.underdocx.tools.tree.nodepath.TreeNodeCollector;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeletePlaceholderModifier<P> implements Modifier<OdtContainer, P, OdfTextDocument, DeletePlaceholderModifierData> {
+public class DeletePlaceholderModifier<C extends DocContainer<D>, P, D> implements Modifier<C, P, D, DeletePlaceholderModifierData> {
     @Override
-    public boolean modify(Selection<OdtContainer, P, OdfTextDocument> selection, DeletePlaceholderModifierData modifierData) {
+    public boolean modify(Selection<C, P, D> selection, DeletePlaceholderModifierData modifierData) {
         return modify(selection.getNode(), modifierData);
     }
 
     public static boolean modify(Node placeholderNode, DeletePlaceholderModifierData modifierData) {
         return Convenience.build(false, result -> {
-            OdfTools.findAscendantParagraph(placeholderNode).ifPresent(p -> {
+            OdfTools.findAscendantParagraph(placeholderNode, false).ifPresent(p -> {
                 // TODO copy pageBreak info to next paragraph if requested
                 TextualPlaceholderToolkit.deletePlaceholder(placeholderNode);
                 if (modifierData.getDeleteStrategy() != DeletePlaceholderModifierData.Strategy.KEEP_PARAGRAPH) {

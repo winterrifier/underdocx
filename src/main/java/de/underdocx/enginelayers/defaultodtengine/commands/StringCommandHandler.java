@@ -24,27 +24,52 @@ SOFTWARE.
 
 package de.underdocx.enginelayers.defaultodtengine.commands;
 
+import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePlaceholderModifier;
 import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePlaceholderModifierData;
 import de.underdocx.enginelayers.baseengine.modifiers.stringmodifier.ReplaceWithTextModifier;
 import de.underdocx.enginelayers.defaultodtengine.commands.internal.AbstractTextualCommandHandler;
 import de.underdocx.enginelayers.defaultodtengine.commands.internal.ResolvedAttributeValue;
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
+import de.underdocx.tools.common.Convenience;
+import de.underdocx.tools.common.Regex;
 
-public class StringCommandHandler extends AbstractTextualCommandHandler {
-    @Override
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+public class StringCommandHandler<C extends DocContainer<D>, D> extends AbstractTextualCommandHandler<C, D> {
+    
+    public final static Regex KEYS = new Regex(Pattern.quote("String"));
+
+    public StringCommandHandler() {
+        super(KEYS);
+    }
+
     protected CommandHandlerResult tryExecuteTextualCommand() {
-        String foundKey = placeholderData.getKey();
-        if (!foundKey.equals("String")) {
-            return CommandHandlerResult.IGNORED;
-        }
         ResolvedAttributeValue<String> resolvedText = resolveStringAttribute("value");
         if (resolvedText.getValue() != null) {
-            new ReplaceWithTextModifier().modify(selection, resolvedText.getValue());
-        } else if (resolvedText.getResolveType() == ResolvedAttributeValue.ResolveType.UNRESOLVED_NO_ATTRIBUTE) {
-            new ReplaceWithTextModifier().modify(selection, String.valueOf(model.getValue()));
-        } else {
-            DeletePlaceholderModifier.modify(selection.getNode(), DeletePlaceholderModifierData.DEFAULT);
+            new ReplaceWithTextModifier<C, ParametersPlaceholderData, D>().modify(selection, resolvedText.getValue());
+            return CommandHandlerResult.EXECUTED;
         }
+        if (resolvedText.getResolveType() == ResolvedAttributeValue.ResolveType.UNRESOLVED_NO_ATTRIBUTE) {
+            Optional<String> txt = getTextNoAttribute();
+            if (txt.isPresent()) {
+                new ReplaceWithTextModifier<C, ParametersPlaceholderData, D>().modify(selection, txt.get());
+                return CommandHandlerResult.EXECUTED;
+            }
+        }
+        DeletePlaceholderModifier.modify(selection.getNode(), DeletePlaceholderModifierData.DEFAULT);
         return CommandHandlerResult.EXECUTED;
+    }
+
+    private Optional<String> getTextNoAttribute() {
+        return Convenience.buildOptional(result -> {
+            modelAccess.getCurrentModelNode().ifPresent(modelNode -> {
+                if (modelNode.getType() == ModelNode.ModelNodeType.LEAF) {
+                    result.value = String.valueOf(modelNode.getValue());
+                }
+            });
+        });
     }
 }

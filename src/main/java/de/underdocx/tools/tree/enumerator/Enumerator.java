@@ -109,7 +109,5 @@ public interface Enumerator<T> extends Iterable<T>, Iterator<T>, Enumeration<T> 
         return this;
     }
 
-    default LookAheadEnumerator<T> toLookAheadEnumerator() {
-        return new SimpleLookAheadEnumerator<>(this);
-    }
+   
 }

@@ -36,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -108,6 +109,10 @@ public class JsonCodec implements Codec<JsonNode> {
 
     public Map<String, Object> getAsMap(JsonNode data) {
         return mapper.convertValue(data, Map.class);
+    }
+
+    public List<Object> getAsList(JsonNode data) {
+        return mapper.convertValue(data, List.class);
     }
 
     public Optional<Map<String, Object>> getAsMap(String data) {

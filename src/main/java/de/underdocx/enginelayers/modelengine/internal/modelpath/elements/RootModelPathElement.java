@@ -26,9 +26,10 @@ package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
+import java.util.List;
 import java.util.Optional;
 
-import static de.underdocx.tools.common.Convenience.buildOptional;
+import static de.underdocx.tools.common.Convenience.*;
 
 public class RootModelPathElement implements ModelPathElement {
 
@@ -49,5 +50,10 @@ public class RootModelPathElement implements ModelPathElement {
                 w.value = w.value.getParent();
             }
         });
+    }
+
+    @Override
+    public void interpret(List<ModelPathElement> elementsWithoutThis) {
+        elementsWithoutThis.clear();
     }
 }

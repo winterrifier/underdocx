@@ -28,12 +28,9 @@ import de.underdocx.common.doc.DocContainer;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
 
-import java.util.Deque;
 import java.util.Optional;
 
 public interface MSelection<C extends DocContainer<D>, P, D> extends Selection<C, P, D> {
 
     Optional<ModelAccess> getModelAccess();
-
-    Optional<Deque<Scope>> getScopeStack();
 }

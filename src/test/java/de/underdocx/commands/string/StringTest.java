@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 public class StringTest extends AbstractOdtTest {
 
     @Test
-    public void testModeString() {
+    public void testModelString() {
         String jsonString = """
                 {
                   "a":{
@@ -60,6 +60,48 @@ public class StringTest extends AbstractOdtTest {
         assertContains(doc, "B Test0 B");
         assertContains(doc, "C Test3 C");
         assertContains(doc, "D  D");
+        assertNoPlaceholders(doc);
+    }
+
+    @Test
+    public void testVariablesString() {
+        String jsonString = """
+                {
+                  "a":{
+                    "b":["Test0", "Test1"]
+                  },
+                  "c":{
+                    "d":["Test2", "Test3"]
+                  },
+                  varName: "y"              
+                }
+                """;
+        String documentStr = "" +
+                "${Push key:\"x\", value:\"attX1\"}     \n" +
+                "A ${String $value:\"x\"} A             \n" + // A attX1 A
+
+                "${Push key:\"x\", @value:\"a.b[0]\"}   \n" +
+                "B ${String $value:\"x\"} B             \n" + // B Test0 B
+
+                "${Pop key:\"x\"}                       \n" +
+                "C ${String $value:\"x\"} C             \n" + // C attX1 C
+
+                "${Pop key:\"x\"}                       \n" +
+                "D ${String $value:\"x\"} D             \n" + // D  D
+
+                "${Push @key:\"varName\", value:42}     \n" +
+                "E ${String $value:\"y\"} E             \n" + // E 42 E
+
+                "";
+        OdtContainer doc = new OdtContainer(documentStr);
+        DefaultODTEngine engine = new DefaultODTEngine(doc);
+        engine.setModel(new MapModelNode(jsonString));
+        engine.run();
+        assertContains(doc, "A attX1 A");
+        assertContains(doc, "B Test0 B");
+        assertContains(doc, "C attX1 C");
+        assertContains(doc, "D  D");
+        assertContains(doc, "E 42 E");
         assertNoPlaceholders(doc);
     }
 }

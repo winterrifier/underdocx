@@ -32,16 +32,21 @@ public class ResolvedAttributeValue<T> {
     public enum ResolveType {
         UNRESOLVED_NO_ATTRIBUTE,
         UNRESOLVED_NO_MODEL,
+        UNRESOLVED_NO_VAR,
         UNRESOLVED_INCOMPATIBLE,
+        UNRESOLVED_EMPTY_ATTR,
         RESOLVED_ATTRIBUTE_VALUE,
-        RESOLVED_MODEL_VALUE
+        RESOLVED_MODEL_VALUE,
+        RESOLVED_VAR_VALUE
     }
 
     private T value = null;
     private ResolveType resolveType;
 
-    public ResolvedAttributeValue() {
-        this.resolveType = ResolveType.UNRESOLVED_NO_ATTRIBUTE;
+    public boolean isResolved() {
+        return resolveType == ResolveType.RESOLVED_ATTRIBUTE_VALUE
+                || resolveType == ResolveType.RESOLVED_VAR_VALUE
+                || resolveType == ResolveType.RESOLVED_MODEL_VALUE;
     }
 
     public ResolvedAttributeValue(ResolveType type, T value) {

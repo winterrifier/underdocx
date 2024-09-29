@@ -33,6 +33,7 @@ import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar
 import de.underdocx.enginelayers.baseengine.internal.placeholdersprovider.dollar.image.SimpleDollarImagePlaceholdersProvider;
 import de.underdocx.enginelayers.defaultodtengine.commands.ModelCommandHandler;
 import de.underdocx.enginelayers.defaultodtengine.commands.StringCommandHandler;
+import de.underdocx.enginelayers.defaultodtengine.commands.VariableCommandHandler;
 import de.underdocx.enginelayers.modelengine.MCommandHandler;
 import de.underdocx.enginelayers.modelengine.ModelEngine;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
@@ -63,6 +64,7 @@ public class DefaultODTEngine implements Runnable {
         engine.registerCommandHandler(parameters, new CurrentDateCommand<>());
         engine.registerCommandHandler(parameters, new ModelCommandHandler());
         engine.registerCommandHandler(parameters, new StringCommandHandler());
+        engine.registerCommandHandler(parameters, new VariableCommandHandler());
     }
 
     public DefaultODTEngine(OdtContainer doc) {
