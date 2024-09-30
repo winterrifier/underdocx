@@ -38,7 +38,7 @@ public class ModelPath {
 
     private static final ModelPathCodec codec = new ModelPathCodec();
 
-    private List<ModelPathElement> elements = new ArrayList<>();
+    protected List<ModelPathElement> elements = new ArrayList<>();
 
     public ModelPath(List<ModelPathElement> elements) {
         this.elements.addAll(elements);
@@ -69,8 +69,8 @@ public class ModelPath {
         return new ModelPath(path).interpret(node);
     }
 
-    public Optional<ModelNode> interpret(ModelNode node) {
-        return Convenience.buildOptional(node, w -> {
+    public Optional<ModelNode> interpret(ModelNode rootModelNode) {
+        return Convenience.buildOptional(rootModelNode, w -> {
             elements.forEach(element -> {
                 if (w.value != null) {
                     w.value = element.interpret(w.value).orElse(null);
@@ -81,7 +81,15 @@ public class ModelPath {
 
     public void interpret(String path) {
         List<ModelPathElement> subPath = new ModelPath(path).getElements();
+        interpret(subPath);
+    }
+
+    protected void interpret(List<ModelPathElement> subPath) {
         subPath.forEach(subElement -> subElement.interpret(elements));
+    }
+
+    public ModelPath clone() {
+        return new ModelPath(this);
     }
 
 

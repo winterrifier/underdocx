@@ -42,7 +42,7 @@ import java.util.*;
 
 public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
 
-    protected ModelNode model = new MapModelNode();
+    protected ModelNode modelRoot = new MapModelNode();
     protected ModelPath currentModelPath = new ModelPath();
     protected Map<String, Deque<ModelNode>> variableStacks = new HashMap<>();
 
@@ -51,8 +51,8 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
         super(doc);
     }
 
-    public void setModel(ModelNode model) {
-        this.model = model;
+    public void setModelRoot(ModelNode modelRoot) {
+        this.modelRoot = modelRoot;
         this.currentModelPath = new ModelPath();
     }
 
@@ -66,12 +66,12 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
 
         @Override
         public Optional<ModelNode> getCurrentModelNode() {
-            return currentModelPath.interpret(model);
+            return currentModelPath.interpret(modelRoot);
         }
 
         @Override
         public ModelNode getRootModelNode() {
-            return model;
+            return modelRoot;
         }
 
         @Override
@@ -108,10 +108,9 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
         public Pair<String, Optional<ModelNode>> interpret(String suffix, boolean setAsCurrent) {
             ModelPath p = setAsCurrent ? currentModelPath : new ModelPath(currentModelPath);
             p.interpret(suffix);
-            Optional<ModelNode> subNode = p.interpret(model);
+            Optional<ModelNode> subNode = p.interpret(modelRoot);
             return new Pair<>(p.toString(), subNode);
         }
-
 
         @Override
         public void setCurrentPath(String modelPath) {

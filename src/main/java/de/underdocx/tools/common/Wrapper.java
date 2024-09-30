@@ -25,8 +25,9 @@ SOFTWARE.
 package de.underdocx.tools.common;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
-public class Wrapper<T> {
+public class Wrapper<T> implements Supplier<T> {
     public T value;
 
     public Wrapper() {
@@ -42,5 +43,10 @@ public class Wrapper<T> {
 
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public T get() {
+        return value;
     }
 }

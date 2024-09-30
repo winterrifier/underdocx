@@ -118,15 +118,15 @@ public class DefaultODTEngine implements Runnable {
     }
 
     public void setModel(ModelNode tree) {
-        engine.setModel(tree);
+        engine.setModelRoot(tree);
     }
 
     public void setModel(Object object) {
-        engine.setModel(new ReflectionModelNode(object));
+        engine.setModelRoot(new ReflectionModelNode(object));
     }
 
     public void setModel(Object object, ReflectionModelNode.Resolver resolver) {
-        engine.setModel(new ReflectionModelNode(object, resolver));
+        engine.setModelRoot(new ReflectionModelNode(object, resolver));
     }
 
 

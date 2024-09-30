@@ -25,9 +25,12 @@ SOFTWARE.
 package de.underdocx.modelengine;
 
 import de.underdocx.AbstractTest;
+import de.underdocx.enginelayers.modelengine.internal.modelpath.ActivePrefixModelPath;
 import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
+import de.underdocx.tools.common.Wrapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,5 +93,24 @@ public class ModelPathTest extends AbstractTest {
         assertThat(ModelPath.interpret(path, model).get().getValue()).isEqualTo("h");
     }
 
+    @Test
+    public void testActivePrefixModelPath() {
+        Wrapper<String> prefixSupplier = new Wrapper<>("x");
+        ModelPath path = new ActivePrefixModelPath(prefixSupplier, "a.b");
+
+        ModelPath testPath = path.clone();
+        testPath.interpret("x.c");
+        Assertions.assertThat(testPath.toString()).isEqualTo("a.b.c");
+
+        prefixSupplier.value = null;
+        testPath = path.clone();
+        testPath.interpret("x.c");
+        Assertions.assertThat(testPath.toString()).isEqualTo("a.b.x.c");
+
+        prefixSupplier.value = "x";
+        testPath = path.clone();
+        testPath.interpret("<d");
+        Assertions.assertThat(testPath.toString()).isEqualTo("a.d");
+    }
 
 }
