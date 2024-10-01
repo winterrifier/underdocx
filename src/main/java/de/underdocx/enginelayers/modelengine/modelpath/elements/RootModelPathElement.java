@@ -22,14 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.internal.modelpath.parser;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
 
-public class ModelPathParseException extends Exception {
-    public ModelPathParseException(String message, Exception e) {
-        super(message, e);
+import de.underdocx.enginelayers.modelengine.model.ModelNode;
+
+import java.util.List;
+import java.util.Optional;
+
+import static de.underdocx.tools.common.Convenience.*;
+
+public class RootModelPathElement implements ModelPathElement {
+
+    public String toString() {
+        return getType().toString();
     }
 
-    public ModelPathParseException(String message) {
-        super(message);
+
+    @Override
+    public ModelPathElementType getType() {
+        return ModelPathElementType.ROOT;
+    }
+
+    @Override
+    public Optional<ModelNode> interpret(ModelNode node) {
+        return buildOptional(node, w -> {
+            while (w.value.getParent() != null) {
+                w.value = w.value.getParent();
+            }
+        });
+    }
+
+    @Override
+    public void interpret(List<ModelPathElement> elementsWithoutThis) {
+        elementsWithoutThis.clear();
     }
 }

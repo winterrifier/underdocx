@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.internal.modelpath;
+package de.underdocx.enginelayers.modelengine.modelpath;
 
-import de.underdocx.enginelayers.modelengine.internal.modelpath.elements.ModelPathElement;
-import de.underdocx.enginelayers.modelengine.internal.modelpath.elements.ModelPathElementType;
-import de.underdocx.enginelayers.modelengine.internal.modelpath.elements.PropertyModelPathElement;
+import de.underdocx.enginelayers.modelengine.modelpath.elements.ModelPathElement;
+import de.underdocx.enginelayers.modelengine.modelpath.elements.ModelPathElementType;
+import de.underdocx.enginelayers.modelengine.modelpath.elements.PropertyModelPathElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,10 @@ public class ActivePrefixModelPath extends ModelPath {
 
     public ActivePrefixModelPath(Supplier<String> prefixSupplier, ModelPath modelPath) {
         this(prefixSupplier, modelPath.elements);
+    }
+
+    public ActivePrefixModelPath(String prefix, ModelPath modelPath) {
+        this(() -> prefix, modelPath.elements);
     }
 
     public ActivePrefixModelPath(Supplier<String> prefixSupplier, String pathToParse) {

@@ -22,38 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
 
-import de.underdocx.enginelayers.modelengine.model.ModelNode;
+public enum ModelPathElementType {
+    BACK("<"), ROOT("^"), INDEX("[]"), PROPERTY("*");
 
-import java.util.List;
-import java.util.Optional;
+    private final String str;
 
-import static de.underdocx.tools.common.Convenience.*;
-
-public class RootModelPathElement implements ModelPathElement {
+    ModelPathElementType(String s) {
+        this.str = s;
+    }
 
     public String toString() {
-        return getType().toString();
-    }
-
-
-    @Override
-    public ModelPathElementType getType() {
-        return ModelPathElementType.ROOT;
-    }
-
-    @Override
-    public Optional<ModelNode> interpret(ModelNode node) {
-        return buildOptional(node, w -> {
-            while (w.value.getParent() != null) {
-                w.value = w.value.getParent();
-            }
-        });
-    }
-
-    @Override
-    public void interpret(List<ModelPathElement> elementsWithoutThis) {
-        elementsWithoutThis.clear();
+        return str;
     }
 }

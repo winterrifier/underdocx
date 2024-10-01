@@ -25,10 +25,10 @@ SOFTWARE.
 package de.underdocx.modelengine;
 
 import de.underdocx.AbstractTest;
-import de.underdocx.enginelayers.modelengine.internal.modelpath.ActivePrefixModelPath;
-import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
+import de.underdocx.enginelayers.modelengine.modelpath.ActivePrefixModelPath;
+import de.underdocx.enginelayers.modelengine.modelpath.ModelPath;
 import de.underdocx.tools.common.Wrapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

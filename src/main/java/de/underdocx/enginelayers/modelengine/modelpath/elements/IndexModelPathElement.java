@@ -22,33 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.underdocx.enginelayers.modelengine.internal.modelpath.elements;
+package de.underdocx.enginelayers.modelengine.modelpath.elements;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 
 import java.util.List;
 import java.util.Optional;
 
-public class BackModelPathElement implements ModelPathElement {
+import static de.underdocx.tools.common.Convenience.*;
+
+public class IndexModelPathElement implements ModelPathElement {
+    private final int index;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public IndexModelPathElement(int index) {
+        this.index = index;
+    }
 
     public String toString() {
-        return getType().toString();
+        return "[" + index + "]";
     }
 
     @Override
     public ModelPathElementType getType() {
-        return ModelPathElementType.BACK;
+        return ModelPathElementType.INDEX;
     }
 
     @Override
     public Optional<ModelNode> interpret(ModelNode node) {
-        return Optional.ofNullable(node.getParent());
+        return buildOptional(w -> w.value = node.hasProperty(index) ? node.getProperty(index) : null);
     }
 
     @Override
     public void interpret(List<ModelPathElement> elementsWithoutThis) {
-        if (elementsWithoutThis.size() > 0) {
-            elementsWithoutThis.remove(elementsWithoutThis.size() - 1);
-        }
+        elementsWithoutThis.add(this);
     }
 }

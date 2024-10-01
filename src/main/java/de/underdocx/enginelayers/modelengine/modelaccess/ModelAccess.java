@@ -25,6 +25,7 @@ SOFTWARE.
 package de.underdocx.enginelayers.modelengine.modelaccess;
 
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
+import de.underdocx.enginelayers.modelengine.modelpath.ModelPath;
 import de.underdocx.tools.common.Pair;
 
 import java.util.Optional;
@@ -35,10 +36,14 @@ public interface ModelAccess {
 
     ModelNode getRootModelNode();
 
-    String getCurrentModelPath();
+    ModelPath getCurrentModelPath();
 
+    void setCurrentModelPath(ModelPath modelPath);
+
+    @Deprecated()
     Pair<String, Optional<ModelNode>> interpret(String suffix, boolean setAsCurrent);
 
+    @Deprecated
     void setCurrentPath(String modelPath);
 
     void popVariable(String name);

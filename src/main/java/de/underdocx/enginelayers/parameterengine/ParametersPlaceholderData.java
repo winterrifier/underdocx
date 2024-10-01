@@ -43,6 +43,8 @@ public interface ParametersPlaceholderData {
 
     void setJson(JsonNode json);
 
+    void clearAttributes();
+
     void addStringAttribute(String property, String value);
 
     default boolean hasAttribute(String property) {
@@ -83,6 +85,11 @@ public interface ParametersPlaceholderData {
             this.json = json;
         }
 
+        public Simple(String key) {
+            this.key = key;
+            this.json = JsonNodeFactory.instance.objectNode();
+        }
+
         @Override
         public JsonNode getJson() {
             return json;
@@ -91,6 +98,11 @@ public interface ParametersPlaceholderData {
         @Override
         public void setJson(JsonNode json) {
             this.json = json;
+        }
+
+        @Override
+        public void clearAttributes() {
+            this.json = JsonNodeFactory.instance.objectNode();
         }
 
         @Override

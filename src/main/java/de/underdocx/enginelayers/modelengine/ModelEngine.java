@@ -30,10 +30,10 @@ import de.underdocx.enginelayers.baseengine.EngineAccess;
 import de.underdocx.enginelayers.baseengine.PlaceholdersProvider;
 import de.underdocx.enginelayers.baseengine.Selection;
 import de.underdocx.enginelayers.modelengine.internal.MSelectionWrapper;
-import de.underdocx.enginelayers.modelengine.internal.modelpath.ModelPath;
 import de.underdocx.enginelayers.modelengine.model.ModelNode;
 import de.underdocx.enginelayers.modelengine.model.simple.MapModelNode;
 import de.underdocx.enginelayers.modelengine.modelaccess.ModelAccess;
+import de.underdocx.enginelayers.modelengine.modelpath.ModelPath;
 import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.common.Pair;
 import org.w3c.dom.Node;
@@ -75,8 +75,13 @@ public class ModelEngine<C extends DocContainer<D>, D> extends BaseEngine {
         }
 
         @Override
-        public String getCurrentModelPath() {
-            return currentModelPath.toString();
+        public ModelPath getCurrentModelPath() {
+            return currentModelPath.clone();
+        }
+
+        @Override
+        public void setCurrentModelPath(ModelPath modelPath) {
+            currentModelPath = modelPath;
         }
 
         public void popVariable(String name) {

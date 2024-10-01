@@ -71,6 +71,10 @@ public abstract class AbstractTextualCommandHandler<C extends DocContainer<D>, D
         return resolveStringAttribute("value").getOptionalValue();
     }
 
+    protected Optional<String> resolveValue(String attrName) {
+        return resolveStringAttribute(attrName).getOptionalValue();
+    }
+
     protected Optional<ModelNode> resolveModelValue() {
         return AttributeResolver.resolveModelNode("value", modelAccess, placeholderData).getOptionalValue();
     }

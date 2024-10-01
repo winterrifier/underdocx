@@ -30,7 +30,10 @@ import de.underdocx.enginelayers.baseengine.modifiers.EngineListener;
 import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePlaceholderModifier;
 import de.underdocx.enginelayers.baseengine.modifiers.deleteplaceholder.DeletePlaceholderModifierData;
 import de.underdocx.enginelayers.defaultodtengine.commands.internal.AbstractTextualCommandHandler;
+import de.underdocx.enginelayers.modelengine.modelpath.ActivePrefixModelPath;
+import de.underdocx.enginelayers.modelengine.modelpath.ModelPath;
 import de.underdocx.enginelayers.parameterengine.ParametersPlaceholderData;
+import de.underdocx.tools.common.Convenience;
 import de.underdocx.tools.common.Regex;
 
 import java.util.Optional;
@@ -41,32 +44,53 @@ import static de.underdocx.tools.common.Convenience.*;
 public class ModelCommandHandler<C extends DocContainer<D>, D> extends AbstractTextualCommandHandler<C, D>
         implements EngineListener<C, D> {
 
-    public static final String MODEL = "Model";
-    public static final Regex KEYS = new Regex(Pattern.quote(MODEL));
+    public static final String KEY = "Model";
+    public static final Regex KEYS = new Regex(Pattern.quote(KEY));
+    public static final String ATTR_INTERPRET = "interpret";
+    public static final String ATTR_PREFIX = "activeModelPathPrefix";
+    public static final String ATTR_VALUE = "value";
+
 
     public ModelCommandHandler() {
         super(KEYS);
     }
 
+    public static ParametersPlaceholderData createPlaceholderData(String modelPath, String prefix) {
+        ParametersPlaceholderData placeholder = new ParametersPlaceholderData.Simple(KEY);
+        placeholder.addStringAttribute(ATTR_VALUE, modelPath);
+        if (prefix != null) {
+            placeholder.addStringAttribute(ATTR_PREFIX, prefix);
+        }
+        return placeholder;
+    }
+
+
     @Override
     protected CommandHandlerResult tryExecuteTextualCommand() {
-        return build(CommandHandlerResult.IGNORED,
-                result -> {
-                    Optional<String> resolvedValue = resolveValue();
-                    if (resolvedValue.isPresent()) {
-                        modelAccess.setCurrentPath(resolvedValue.get());
-                        engineAccess.addListener(this);
-                        result.value = CommandHandlerResult.EXECUTED;
-                    } else {
-                        Optional<String> interpret = resolveStringAttribute("interpret").getOptionalValue();
-                        if (interpret.isPresent()) {
-                            modelAccess.interpret(interpret.get(), true);
-                            result.value = CommandHandlerResult.EXECUTED;
-                        }
-                    }
+        return build(CommandHandlerResult.EXECUTED, result -> {
+            engineAccess.addListener(this);
+            ModelPath newPath = build(modelAccess.getCurrentModelPath(), p ->
+                    resolveValue(ATTR_VALUE).ifPresentOrElse(
+                            value -> p.value = setPath(value),
+                            () -> resolveValue(ATTR_INTERPRET).ifPresent(interpret ->
+                                    p.value = interpret(interpret))));
+            newPath = prepareModelPathPrefix(newPath);
+            modelAccess.setCurrentModelPath(newPath);
+        });
+    }
 
-                }
-        );
+    private ModelPath prepareModelPathPrefix(ModelPath currentModelPath) {
+        Optional<String> prefix = resolveValue(ATTR_PREFIX);
+        ActivePrefixModelPath result = new ActivePrefixModelPath(prefix.orElse(null), currentModelPath);
+        return result;
+    }
+
+    private ModelPath interpret(String interpretValue) {
+        return Convenience.also(modelAccess.getCurrentModelPath(), result -> result.interpret(interpretValue));
+    }
+
+    private ModelPath setPath(String path) {
+        return new ModelPath(path);
     }
 
 
@@ -74,7 +98,7 @@ public class ModelCommandHandler<C extends DocContainer<D>, D> extends AbstractT
     public void eodReached(C doc, EngineAccess<C, D> engineAccess) {
         engineAccess.lookBack(node -> {
             Optional<ParametersPlaceholderData> placeholderData = examineNode(node);
-            return placeholderData.isPresent() && (placeholderData.get()).getKey().equals(MODEL);
+            return placeholderData.isPresent() && (placeholderData.get()).getKey().equals(KEY);
         }).forEach(placeholderNode -> DeletePlaceholderModifier.modify(placeholderNode, DeletePlaceholderModifierData.DEFAULT));
     }
 
