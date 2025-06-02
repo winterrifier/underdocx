@@ -49,10 +49,10 @@
 
         <h2>About</h2>
         <h3>Document Template Engine</h3>
-        Underdocx is an extremly extendable open source Java framework to manipulate multiple types of
+        Underdocx is an extremely extendable open source Java framework to manipulate multiple types of
         Documents, for example ODT text documents (LibreOffice/OpenOffice Writer),
-        ODG Graphics (LibreOffice/OpenOffice Draw), ODP Presentations (LibreOffice/OpenOffice Impress), ODS Speadsheets
-        (LibreOffic/OpenOffice Calc) and all plain text files as TXT, HTML, Scripts etc.
+        ODG Graphics (LibreOffice/OpenOffice Draw), ODP Presentations (LibreOffice/OpenOffice Impress), ODS Spreadsheets
+        (LibreOffice/OpenOffice Calc) and all plain text files as TXT, HTML, Scripts etc.
         It uses different types of parameterizable placeholders that will be replaced by custom texts, images, tables
         and even other documents. This allows you to define "components" that can be easily reused. Underdocx also
         allows
@@ -114,7 +114,7 @@
     System.out.println("Document created: %s".formatted(tmpFile));
   }
 }</code></pre>
-        This code will create a ODT-document with prefix "Test_" in your temp folder that contains text "Hello World"
+        This code will create a ODT-document with prefix "Test_" in your temp folder that contains the text "Hello World"
 
 
         <h2>Principles</h2>
@@ -211,7 +211,7 @@ ${For value:[{firstName: "Hans", lastName:"Müller"}, {firstName: "Jon", lastNam
         accessed by the placeholders. Usually the attribute prefix '$' indicates access to a variable. For example,
         the given text:
         <pre class="padding"><code>Example: ${Date $value:"dateToShow" outputFormat:"dd.MM.yyyy"}</code></pre>
-        and the code snipped:
+        and the code snippet:
         <pre class="highlightjs highlight nowrap"><code class="language-java hljs" data-lang="java">String lastYear = LocalDate.now().minusYear(1)
           .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 engine.pushVariable("dateToShow", lastYear);</code></pre>
@@ -222,7 +222,7 @@ engine.pushVariable("dateToShow", lastYear);</code></pre>
         <h4>Variable referencing Variable</h4>
         In some cases it might be useful that a variable stores the name/address of an other variable.
         This variable reference can be resolved with prefix '$$'.
-        The folowing example stores the value "Hello World" in variable "out", and Variable "reference" stores
+        The following example stores the value "Hello World" in variable "out", and Variable "reference" stores
         the variable name "out". The prefix '$$' is used to resolve "reference" and to print out "Hello World" directly.
         <pre class="padding"><code>${Push key:"out", value:"Hello World"}
 ${Push key:"reference", value:"out"}
@@ -240,7 +240,7 @@ ${String $$value:"reference"}</code></pre>
         The usage of models is optional, you might also use variables.
         This example shows how to register a model and how to address a node:
         <pre class="padding"><code>Example: ${Date *value:"persons[1].birthday" outputFormat:"dd.MM.yyyy"}</code></pre>
-        and this code snipped:
+        and this code snippet:
         <pre class="highlightjs highlight nowrap"><code class="language-java hljs" data-lang="java">DataNode model = new MapDataNode("""
           {
               persons: [
@@ -417,7 +417,7 @@ Resource resource = new Resource.Base64Resource(String b64Data);      </code></p
 
         The <code-word>DataTreeBuilder</code-word> provides a fluent API to build up a tree data structure. It helps
         to construct structures that can not be expressed by JSON, for example structures that
-        contains non primitive objects. The next example create a list of persons that contain
+        contains non-primitive objects. The next example create a list of persons that contain
         <code-word>Resource</code-word>-objects representing images.
         <pre class="highlightjs highlight nowrap"><code class="language-java hljs" data-lang="java">private DataNode createPersonsData() throws IOException {
   Resource resource1 = new Resource.FileResource("image1.png");
@@ -464,7 +464,7 @@ Resource resource = new Resource.Base64Resource(String b64Data);      </code></p
 }
       
 private static class TestClassB {
-  public List<String> getC() {
+  public List&lt;String&gt; getC() {
     return Arrays.asList("Item1", "Item2");
   }
 }
@@ -486,7 +486,7 @@ public static void main (String[] args) {
   doc.save(tmpFile);
 }</code></pre>
 
-        This snipped will create a document with content:
+        This snippet will create a document with content:
 
         <pre class="padding"><code>42
 Item1
@@ -824,7 +824,7 @@ Item1
           </tr>
           <tr>
             <td>rowGroupSize</td>
-            <td>how many rows blong to a single item</td>
+            <td>how many rows belong to a single item</td>
           </tr>
           <tr>
             <td>tableName</td>
@@ -832,7 +832,7 @@ Item1
           </tr>
           <tr>
             <td>parentTable</td>
-            <td>you can use this attribte to clarify that this loop is inside of the table that contains rows to repeat
+            <td>you can use this attribute to clarify that this loop is inside the table that contains rows to repeat
             </td>
           </tr>
           <tr>
@@ -938,7 +938,7 @@ Item1
             </td>
             <td>
               <no-br>0 <guide-b>A</guide-b></no-br><br>
-              <no-br>1 <guide-b>B<guide-b></no-br><br>
+              <no-br>1 <guide-b>B</guide-b></no-br><br>
             </td>
             <td>
               The list is accessed through model property "list". During iteration the current item becomes the current
@@ -977,7 +977,7 @@ Item1
         <div class="imageContainer"><img src="images/guide/ForTableName.png" /></div>
 
         To style table cells use Attribute <code-word>templaceCell</code-word> of several commands. It
-        might be usefull to store styled cell addresses as variable, that can be used later by
+        might be useful to store styled cell addresses as variable, that can be used later by
         the data.
 
         <div class="imageContainer"><img src="images/guide/tableStyledCell1.png" /></div>
@@ -1189,7 +1189,7 @@ ${EndIf}</code></pre>
               beginFragmentRegex
             </td>
             <td>
-              For TXT files this optional regular expression marks the begin of a text fragment to import. The marked
+              For TXT files this optional regular expression marks the start of a text fragment to import. The marked
               line is excluded
             </td>
           </tr>
@@ -1248,7 +1248,7 @@ ${EndIf}</code></pre>
           <tr>
             <td>uri</td>
             <td>
-              Attribute refers to a String that contains an URI to the document
+              Attribute refers to a String that contains a URI to the document
             </td>
           </tr>
           <tr>
@@ -1281,7 +1281,7 @@ ${EndIf}</code></pre>
 
         The master document may contain a <code-word>${ExportTarget}</code-word>-placeholders that shall receive the
         content of the current
-        document that contains the <code-word>${Export}</code-word>-command. This this case, both the
+        document that contains the <code-word>${Export}</code-word>-command. In this case, both the
         <code-word>${Export}</code-word> and
         <code-word>${ExportTarget}</code-word> placeholders have to use the <code-word>name</code-word> Attribute with
         an identical string value.
@@ -1657,7 +1657,7 @@ ${Time value:"2024-12-24 02:03:45"}</code></pre>
           </tr>
           <tr>
             <td>format</td>
-            <td>how to format the number. Default format is "#,###.##". Please read Java documentation of
+            <td>how to format the number. Default format is "#,###.##". Please read the Java documentation of
               DecimalFormat for formatting syntax.
             </td>
           </tr>
@@ -1672,7 +1672,7 @@ ${Time value:"2024-12-24 02:03:45"}</code></pre>
           </tr>
           <tr>
             <td>multiplier</td>
-            <td>multiplies the value by this factor, e.g. to calcualted percentage (0.2 => 20 %)</td>
+            <td>multiplies the value by this factor, e.g. to calculated percentage (0.2 => 20 %)</td>
           </tr>
           <tr>
             <td>summand</td>
@@ -1761,7 +1761,7 @@ ${Join value:["Bibi", "Tina", "Amadeus", "Sabrina"], limit: 2, truncated:" usw."
 
         <h3>${Alias}-Command</h3>
 
-        An alias is a placeholder representing an other placeholder and its parameters. It can be used
+        An alias is a placeholder representing another placeholder and its parameters. It can be used
         to reduce complexity or
         to define new default parameters of the replaced placeholder. To support alias placeholders
         an alias definition has to be registered first.
@@ -1922,7 +1922,7 @@ ${x}</code></pre>
         </table>
 
         <h3>${Copy}-Command</h3>
-        Copies the content of a page (slide) in ODG/ODP documents into an other
+        Copies the content of a page (slide) in ODG/ODP documents into another
 
         <table>
           <tr>
@@ -1987,7 +1987,7 @@ ${x}</code></pre>
 
         <div class="imageContainer"><img src="images/guide/PageBreakWithPageStyle.png" /></div>
 
-        All available page style can be shown or edited in the styles view (Press F11 and select button "Page Styles").
+        All available page styles can be shown or edited in the styles view (Press F11 and select button "Page Styles").
         Here you can also add custom page styles with different header and footers.
 
         <div class="imageContainer"><img src="images/guide/MyPageStyle.png" /></div>
@@ -2020,7 +2020,7 @@ ${x}</code></pre>
             <td>only allowed when pageBreakBefore is true, sets the new page style for the page after the break</td>
           </tr>
           <tr>
-            <td>pageNumbe (ODT only)r</td>
+            <td>pageNumber (ODT only)r</td>
             <td>Integer</td>
             <td>only allowed when masterPage is set, reset the page number for the page after the break </td>
           </tr>
@@ -2055,7 +2055,7 @@ ${x}</code></pre>
           </tr>
           <tr>
             <td>key</td>
-            <td>Name of the variable. You can access an other variable or model node to read out the name </td>
+            <td>Name of the variable. You can access another variable or model node to read out the name </td>
           </tr>
           <tr>
             <td>value</td>
@@ -2286,8 +2286,8 @@ Note: When multiple data files are used, the data of a json file might overwrite
         <h3>Custom Placeholders</h3>
 
         A simple way to add custom placeholders is to add a new custom "key" as command that
-        will be replaced by an other more complex command. This allows you to hide complexity
-        behind simple placeholders. For example, you can import an other sub document
+        will be replaced by another more complex command. This allows you to hide complexity
+        behind simple placeholders. For example, you can import another sub document
         using the <code-word>${Import}</code-word> command and hide the functionality bind the custom command
         <code-word>${ReportTable}</code-word><br>
         <br>
@@ -2390,7 +2390,7 @@ engine.run(doc);</code></pre>
         The example below also defines a custom <code-word>UpperCaseCommandHandler</code-word> that accepts placeholders
         provided by the custom <code-word>MyPlaceholdersProvider</code-word>. It provides all word beginning with
         <code-word>&lt;</code-word> and ending with </code-word>&gt;</code-word>. The
-        <code-word>UpperCaseCommandHandler</code-word> takes the placeholder playload,
+        <code-word>UpperCaseCommandHandler</code-word> takes the placeholder payload,
         converts it in uppercase, and replaces the placeholder with the converted text.<br>
         <br>
 
